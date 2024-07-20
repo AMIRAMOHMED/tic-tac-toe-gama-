@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.shape.SVGPath?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="screens.ListOfAvailablePlayersController">
+   <children>
+      <Text layoutX="322.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Online Players">
+         <font>
+            <Font name="Segoe UI Bold" size="24.0" />
+         </font>
+      </Text>
+      <FlowPane layoutX="272.0" layoutY="98.0" prefHeight="36.0" prefWidth="257.0" style="-fx-border-width: 2; -fx-border-color: #ADADAD;">
+         <children>
+            <SVGPath content="M 13 3 C 7.4889971 3 3 7.4889971 3 13 C 3 18.511003 7.4889971 23 13 23 C 15.396508 23 17.597385 22.148986 19.322266 20.736328 L 25.292969 26.707031 A 1.0001 1.0001 0 1 0 26.707031 25.292969 L 20.736328 19.322266 C 22.148986 17.597385 23 15.396508 23 13 C 23 7.4889971 18.511003 3 13 3 z M 13 5 C 17.430123 5 21 8.5698774 21 13 C 21 17.430123 17.430123 21 13 21 C 8.5698774 21 5 17.430123 5 13 C 5 8.5698774 8.5698774 5 13 5 z" fill="#adadad">
+               <FlowPane.margin>
+                  <Insets left="5.0" />
+               </FlowPane.margin>
+            </SVGPath>
+            <TextField prefHeight="32.0" prefWidth="222.0" promptText="Search Players" style="-fx-background-color: 0;" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </FlowPane>
+      <FlowPane alignment="CENTER" layoutX="300.0" layoutY="237.0" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="No Players Available">
+               <font>
+                  <Font name="Segoe UI Semibold" size="18.0" />
+               </font>
+            </Text>
+            <Text fill="#adadad" strokeType="OUTSIDE" strokeWidth="0.0" text="Please come again later.">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </FlowPane>
+      <FlowPane fx:id="onlinePlayers" alignment="CENTER" layoutX="50.0" layoutY="163.0" prefHeight="400.0" prefWidth="700.0" vgap="5.0" />
+   </children>
+</AnchorPane>

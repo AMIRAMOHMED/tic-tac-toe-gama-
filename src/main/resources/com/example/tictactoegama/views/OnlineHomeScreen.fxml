@@ -140,5 +140,33 @@
             </FlowPane>
          </children>
       </Pane>
+      <FlowPane alignment="CENTER" columnHalignment="CENTER" layoutX="72.0" layoutY="279.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Empty">
+               <font>
+                  <Font name="Segoe UI Semibold" size="18.0" />
+               </font>
+            </Text>
+            <Text fill="#adadad" strokeType="OUTSIDE" strokeWidth="0.0" text="Play Some Games.">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </FlowPane>
+      <FlowPane alignment="CENTER" columnHalignment="CENTER" layoutX="512.0" layoutY="281.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Empty">
+               <font>
+                  <Font name="Segoe UI Semibold" size="18.0" />
+               </font>
+            </Text>
+            <Text fill="#adadad" strokeType="OUTSIDE" strokeWidth="0.0" text="Start Playing Folks.">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children>
+      </FlowPane>
    </children>
 </Pane>
