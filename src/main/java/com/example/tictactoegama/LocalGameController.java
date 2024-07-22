@@ -4,6 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -13,21 +14,16 @@ import javafx.util.Duration;
 public class LocalGameController {
 
     @FXML
+    GridPane gameGrid;
+    @FXML
     Label playerXNametxt,playerONametxt;
     @FXML
     Text gameStatus;
-    @FXML
-    private Button btn00, btn01, btn02, btn10, btn11, btn12, btn20, btn21, btn22;
     char[][] game;
     int XScore,OScore,numberOfPlayes;
     static String playerXName,playerOName;
-    /*LocalGameController(String playerXName , String playerOName){
-        int XScore=0,OScore=0;
-        game=new char[3][3];
-        numberOfPlayes=0;
+    String currentPlayer;
 
-
-    }*/
     @FXML
     public void initialize() {
         int XScore=0,OScore=0;
@@ -47,20 +43,22 @@ public class LocalGameController {
             if(numberOfPlayes%2==0) {
                 updateButtonStyle(clickedButton, "X");
                 gameStatus.setText(playerOName+"'s Turn");
-
+                currentPlayer=playerXName;
             }
             else {
                 updateButtonStyle(clickedButton, "O");
                 gameStatus.setText(playerXName+"'s Turn");
+                currentPlayer=playerOName;
             }
             //clickedButton.setDisable(true);
             if(checkWin(row, col)==1){
-                System.out.println("iwin");
+                endGame(currentPlayer);
             }else
                 numberOfPlayes++;
 
         }
     }
+
 
     private int checkWin(int x, int y) {
 
@@ -101,6 +99,19 @@ public class LocalGameController {
                             "-fx-border-color: #E3E3E3;"
             );
             button.setText("O");
+        }
+    }
+    private void endGame(String winner) {
+        String message = "Player " + winner + " wins!";
+        gameStatus.setText(message);
+        disableButtons();
+    }
+
+    private void disableButtons() {
+        for (Node node : gameGrid.getChildren()) {
+            if (node instanceof Button) {
+                ((Button) node).setDisable(true);
+            }
         }
     }
 }
