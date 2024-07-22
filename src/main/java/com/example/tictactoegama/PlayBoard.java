@@ -50,14 +50,5 @@ public class PlayBoard {
 
     }
 
-    public void mediumMood(char computerSymbol) {
-        Random rand = new Random();
-        int row, col;
-        do {
-            row = rand.nextInt(3); // Randomly select a row (0 to 2)
-            col = rand.nextInt(3); // Randomly select a column (0 to 2)
-        } while (board[row][col] != '_'); // Ensure the chosen cell is empty
-        board[row][col] = computerSymbol; // Place the computer's move on the board
-        counter++; // Increment counter
-    }
+
 }

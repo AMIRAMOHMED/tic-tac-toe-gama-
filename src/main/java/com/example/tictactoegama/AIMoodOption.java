@@ -1,5 +1,11 @@
 package com.example.tictactoegama;
-
-public class AIMoodOption {
+import java.util.Random;
+public interface AIMoodOption {
+    void makeMove(PlayBoard board, char computerSymbol);
 
 }
+
+
+
+
+
