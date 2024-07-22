@@ -1,0 +1,199 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.example.tictactoegama.logic;
+
+import com.example.tictactoegama.interfaces.AIMoodOption;
+import com.example.tictactoegama.models.PlayBoard;
+
+/**
+ *
+ * @author filop
+ */
+public class AIEasyMode implements AIMoodOption {
+     char playerSymbol, computerSymbol;
+    @Override
+    public int makeMove(PlayBoard board, char computerSymbol) {
+        this.computerSymbol = computerSymbol;
+        if (computerSymbol == 'O') {
+            playerSymbol = 'X';
+        } else {
+            playerSymbol = 'O';
+        }
+        int[] move = findWorstMove(board.getBoard());
+        return board.play(move[0], move[1], computerSymbol);
+    }
+
+    private boolean isMovesLeft(char board[][]) {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == '_') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private int evaluate(char b[][]) {
+        // Checking for Rows for X or O victory. 
+        for (int row = 0; row < 3; row++) {
+            if (b[row][0] == b[row][1]
+                    && b[row][1] == b[row][2]) {
+                if (b[row][0] == computerSymbol) {
+                    return +10;
+                } else if (b[row][0] == playerSymbol) {
+                    return -10;
+                }
+            }
+        }
+        // Checking for Columns for X or O victory. 
+        for (int col = 0; col < 3; col++) {
+            if (b[0][col] == b[1][col]
+                    && b[1][col] == b[2][col]) {
+                if (b[0][col] == computerSymbol) {
+                    return +10;
+                } else if (b[0][col] == playerSymbol) {
+                    return -10;
+                }
+            }
+        }
+
+        // Checking for Diagonals for X or O victory. 
+        if (b[0][0] == b[1][1] && b[1][1] == b[2][2]) {
+            if (b[0][0] == computerSymbol) {
+                return +10;
+            } else if (b[0][0] == playerSymbol) {
+                return -10;
+            }
+        }
+
+        if (b[0][2] == b[1][1] && b[1][1] == b[2][0]) {
+            if (b[0][2] == computerSymbol) {
+                return +10;
+            } else if (b[0][2] == playerSymbol) {
+                return -10;
+            }
+        }
+
+        // Else if none of them have won then return 0 
+        return 0;
+
+    }
+
+    private int minimax(char board[][],
+            int depth, Boolean isMax) {
+        int score = evaluate(board);
+
+        // If Maximizer has won the game 
+        // return his/her evaluated score 
+        if (score == 10) {
+            return score;
+        }
+
+        // If Minimizer has won the game 
+        // return his/her evaluated score 
+        if (score == -10) {
+            return score;
+        }
+
+        // If there are no more moves and 
+        // no winner then it is a tie 
+        if (isMovesLeft(board) == false) {
+            return 0;
+        }
+
+        // If this maximizer's move 
+        if (isMax) {
+            int best = -1000;
+
+            // Traverse all cells 
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    // Check if cell is empty 
+                    if (board[i][j] == '_') {
+                        // Make the move 
+                        board[i][j] = computerSymbol;
+
+                        // Call minimax recursively and choose 
+                        // the maximum value 
+                        best = Math.max(best, minimax(board,
+                                depth + 1, !isMax));
+
+                        // Undo the move 
+                        board[i][j] = '_';
+                    }
+                }
+            }
+            return best;
+        } else {
+            int best = 1000;
+
+            // Traverse all cells 
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    // Check if cell is empty 
+                    if (board[i][j] == '_') {
+                        // Make the move 
+                        board[i][j] = playerSymbol;
+
+                        // Call minimax recursively and choose 
+                        // the minimum value 
+                        best = Math.min(best, minimax(board,
+                                depth + 1, !isMax));
+
+                        // Undo the move 
+                        board[i][j] = '_';
+                    }
+                }
+            }
+            return best;
+        }
+    }
+
+    int[] findWorstMove(char board[][]) 
+{ 
+	int worstVal = 1000; 
+	int[] worstMove = new int[2]; 
+	worstMove[0] = -1; 
+	worstMove[1] = -1; 
+
+	// Traverse all cells, evaluate minimax function 
+	// for all empty cells. And return the cell 
+	// with optimal value. 
+	for (int i = 0; i < 3; i++) 
+	{ 
+		for (int j = 0; j < 3; j++) 
+		{ 
+			// Check if cell is empty 
+			if (board[i][j] == '_') 
+			{ 
+				// Make the move 
+				board[i][j] = computerSymbol; 
+
+				// compute evaluation function for this 
+				// move. 
+				int moveVal = minimax(board, 0, false); 
+
+				// Undo the move 
+				board[i][j] = '_'; 
+
+				// If the value of the current move is 
+				// more than the best value, then update 
+				// best/ 
+				if (moveVal < worstVal) 
+				{ 
+					worstMove[0] = i; 
+					worstMove[1] = j; 
+					worstVal = moveVal; 
+				} 
+			} 
+		} 
+	} 
+
+
+	return worstMove; 
+}
+}
