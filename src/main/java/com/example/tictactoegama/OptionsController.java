@@ -20,4 +20,11 @@ public class OptionsController {
     }
 
 
+    public void handlePlayWithFriends(ActionEvent event) throws IOException {
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/getNamesOfTwoPlayers.fxml"));
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
+    }
 }

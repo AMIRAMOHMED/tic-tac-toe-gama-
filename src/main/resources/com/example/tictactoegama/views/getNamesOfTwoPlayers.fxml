@@ -11,7 +11,7 @@
       <Label layoutX="77.0" layoutY="123.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #00C096; -fx-font-size: 16; -fx-font-weight: 600; -fx-font-family: &quot;Roboto&quot;, sans-serif;" text="Player X Name" />
       <TextField fx:id="playerXName" layoutX="212.0" layoutY="121.0" prefHeight="26.0" prefWidth="270.0" style="-fx-border-color: #46A3FF; -fx-border-radius: 3; -fx-border-width: 2;" />
       <Label layoutX="77.0" layoutY="171.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #FF827E; -fx-font-size: 16; -fx-font-weight: 600; -fx-font-family: &quot;Roboto&quot;, sans-serif;" text="Player O Name" />
-      <TextField fx:id="playerYName" layoutX="212.0" layoutY="169.0" prefHeight="26.0" prefWidth="270.0" style="-fx-border-color: #46A3FF; -fx-border-radius: 3; -fx-border-width: 2;" />
+      <TextField fx:id="playerOName" layoutX="212.0" layoutY="169.0" prefHeight="26.0" prefWidth="270.0" style="-fx-border-color: #46A3FF; -fx-border-radius: 3; -fx-border-width: 2;" />
       <Button fx:id="gotoGameBtn" layoutX="252.0" layoutY="245.0" mnemonicParsing="false" onAction="#handleGotoGame" prefHeight="44.0" prefWidth="210.0" style="-fx-background-color: #46A3FF; -fx-text-fill: #FFFFFF; -fx-background-radius: 10; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 20;" text="Go To Game" />
    </children>
 </AnchorPane>
