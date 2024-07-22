@@ -1,4 +1,4 @@
-package com.example.tictactoegama;
+package com.example.tictactoegama.controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

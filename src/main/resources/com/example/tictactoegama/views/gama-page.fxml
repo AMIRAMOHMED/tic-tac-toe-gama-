@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color:  X808080;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.GameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color:  X808080;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.controller.GameController">
     <children>
         <Text fx:id="gameStatus" layoutX="300.0" layoutY="30.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #000000;" text="Tic Tac Toe" />
         <GridPane fx:id="gameGrid" layoutX="200.0" layoutY="100.0" prefHeight="400.0" prefWidth="400.0"   hgap="10.0" vgap="10.0">

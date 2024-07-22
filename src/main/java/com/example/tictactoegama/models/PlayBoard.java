@@ -1,6 +1,4 @@
-package com.example.tictactoegama;
-
-import java.util.Random;
+package com.example.tictactoegama.models;
 
 public class PlayBoard {
 

@@ -1,5 +1,9 @@
-package com.example.tictactoegama;
+package com.example.tictactoegama.controller;
 
+import com.example.tictactoegama.interfaces.AIMoodOption;
+import com.example.tictactoegama.logic.MediumMood;
+import com.example.tictactoegama.models.PlayBoard;
+import com.example.tictactoegama.views.SymbolSelectionDialog;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -40,7 +44,7 @@ public class GameController {
         dialog.show();
     }
 
-    void handleSymbolSelection(String playerSymbol, String compSymbol) {
+    public void handleSymbolSelection(String playerSymbol, String compSymbol) {
         currentPlayer = playerSymbol;
         computerSymbol = compSymbol;
         gameStatus.setText("Current Player: " + currentPlayer);

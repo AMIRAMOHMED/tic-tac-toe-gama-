@@ -1,5 +1,6 @@
-package com.example.tictactoegama;
+package com.example.tictactoegama.views;
 
+import com.example.tictactoegama.controller.GameController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;

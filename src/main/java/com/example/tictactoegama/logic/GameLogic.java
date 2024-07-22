@@ -1,5 +1,7 @@
-package com.example.tictactoegama;
+package com.example.tictactoegama.logic;
 
+import com.example.tictactoegama.models.PlayBoard;
+import com.example.tictactoegama.interfaces.AIMoodOption;
 import javafx.scene.control.Button;
 
 public class GameLogic {

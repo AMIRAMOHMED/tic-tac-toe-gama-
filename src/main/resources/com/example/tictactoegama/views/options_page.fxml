@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="800.0" style="-fx-background-color:X808080;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.OptionsController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600" prefWidth="800.0" style="-fx-background-color:X808080;" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.controller.OptionsController">
     <children>
         <Text layoutX="300.0" layoutY="30.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #000000;" text="Choose Game Mode" />
         <VBox layoutX="292.0" layoutY="86.0" prefHeight="481.0" prefWidth="223.0" spacing="20.0">
