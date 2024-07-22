@@ -52,7 +52,7 @@ public class GameController {
 
     @FXML
     private void handleButtonClick(ActionEvent event) {
-        if (gameEnded) return;
+        if (gameEnded) {  disableButtons();}
 
         Button clickedButton = (Button) event.getSource();
         if (clickedButton.getText().isEmpty()) {
@@ -62,7 +62,7 @@ public class GameController {
             processPlayerMove(clickedButton, row, col);
 
             if (!gameEnded) {
-                PauseTransition pause = new PauseTransition(Duration.seconds(.5));
+                PauseTransition pause = new PauseTransition(Duration.seconds(.2));
                 pause.setOnFinished(e -> processComputerMove());
                 pause.play();
             }
