@@ -72,39 +72,20 @@ public class GameController {
     private void processPlayerMove(Button clickedButton, int row, int col) {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
-        playBoard.play(row, col, currentPlayer.charAt(0));
+        
 
-        if (checkForWin(row, col, currentPlayer.charAt(0))) {
+        if (playBoard.play(row, col, currentPlayer.charAt(0))== 1) {
             endGame(currentPlayer);
         }
     }
 
     private void processComputerMove() {
-        aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0));
-        updateBoardUI();
-
-        if (checkForWinAfterComputerMove()) {
+        if (aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0))==1) {
             endGame(computerSymbol);
         }
+        updateBoardUI();
     }
 
-    private boolean checkForWin(int row, int col, char symbol) {
-        return playBoard.checkWin(row, col, symbol) != -1;
-    }
-
-    private boolean checkForWinAfterComputerMove() {
-        char[][] board = playBoard.getBoard();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (board[i][j] == computerSymbol.charAt(0)) {
-                    if (checkForWin(i, j, computerSymbol.charAt(0))) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
