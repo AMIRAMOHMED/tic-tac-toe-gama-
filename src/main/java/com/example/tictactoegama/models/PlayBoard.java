@@ -4,9 +4,11 @@ public class PlayBoard {
 
     private final char[][] board;
     private int counter;
+    private int[][] winningTiles;
 
     public PlayBoard() {
         counter = 0;
+        winningTiles = new int[3][2];
         board = new char[][]{{'_', '_', '_'}, {'_', '_', '_'}, {'_', '_', '_'}};
     }
 
@@ -38,11 +40,25 @@ public class PlayBoard {
                 if (board[i][2 - i] == symbol) rdiag++;
 
             }
-            if (row == 3 || col == 3 || diag == 3 || rdiag == 3)  win = 1; // Win
+            if (row == 3) {
+                win = 1; // Win by row
+                for (int i = 0; i < 3; i++) winningTiles[i] = new int[]{x, i};
+            } else if (col == 3) {
+                win = 1; // Win by column
+                for (int i = 0; i < 3; i++) winningTiles[i] = new int[]{i, y};
+            } else if (diag == 3) {
+                win = 1; // Win by main diagonal
+                for (int i = 0; i < 3; i++) winningTiles[i] = new int[]{i, i};
+            } else if (rdiag == 3) {
+                win = 1; // Win by reverse diagonal
+                for (int i = 0; i < 3; i++) winningTiles[i] = new int[]{i, 2 - i};
+            }
            
         }
         return win;
     }
 
-
+    public int[][] getWinningTiles() {
+        return winningTiles;
+    }
 }

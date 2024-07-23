@@ -1,6 +1,7 @@
 module com.example.tictactoegama {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
     opens com.example.tictactoegama to javafx.fxml;
     exports com.example.tictactoegama;
