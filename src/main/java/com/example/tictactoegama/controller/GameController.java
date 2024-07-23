@@ -36,18 +36,23 @@ public class GameController {
     private AIMoodOption aiMoodOption;
     @FXML
     private Line winnerLine;
+    private Label difficultyLabel;
 
     @FXML
     public void initialize() {
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
-        aiMoodOption = new MediumMood();
-        winnerLine.setVisible(false);
 
-
-
+        if (aiMoodOption != null) {
+            difficultyLabel.setText("Difficulty: " + aiMoodOption.getClass().getSimpleName());
+        }
     }
+
+    public void setAiMoodOption(AIMoodOption aiMoodOption) {
+        this.aiMoodOption = aiMoodOption;
+    }
+
 
     private void showSymbolSelectionDialog() {
         SymbolSelectionDialog dialog = new SymbolSelectionDialog(this);

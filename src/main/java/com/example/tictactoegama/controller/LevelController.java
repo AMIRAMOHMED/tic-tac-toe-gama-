@@ -1,25 +1,52 @@
-
 package com.example.tictactoegama.controller;
 
+import com.example.tictactoegama.interfaces.AIMoodOption;
+import com.example.tictactoegama.logic.AIEasyMode;
+import com.example.tictactoegama.logic.AIHardMode;
+import com.example.tictactoegama.logic.MediumMood;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class LevelController {
+
     @FXML
-    private void handleButtonActionChooseLevel(ActionEvent event) throws IOException {
-        Parent gamePageParent;
-        gamePageParent = FXMLLoader.load(getClass().getResource("/om/example/tictactoegama/views/choose_level-view.fxml"));
-        Scene gamePageScene = new Scene(gamePageParent);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(gamePageScene);
-        window.show();
+    private Button easyButton;
+
+    @FXML
+    private Button mediumButton;
+
+    @FXML
+    private Button hardButton;
+
+    @FXML
+    private void initialize() {
+        easyButton.setOnAction(e -> handleButtonActionChooseLevel(e, new AIEasyMode()));
+        mediumButton.setOnAction(e -> handleButtonActionChooseLevel(e, new MediumMood()));
+        hardButton.setOnAction(e -> handleButtonActionChooseLevel(e, new AIHardMode()));
     }
 
+    private void handleButtonActionChooseLevel(ActionEvent event, AIMoodOption aiMoodOption) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
+            Parent gamePageParent = loader.load();
 
+            GameController gameController = loader.getController();
+            gameController.setAiMoodOption(aiMoodOption);
+
+            Scene gamePageScene = new Scene(gamePageParent);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(gamePageScene);
+            window.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

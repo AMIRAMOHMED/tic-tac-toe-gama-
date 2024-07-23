@@ -16,14 +16,12 @@ public class AIHardMode implements AIMoodOption {
 
     char playerSymbol, computerSymbol;
 
+
     @Override
+
     public int makeMove(PlayBoard board, char computerSymbol) {
         this.computerSymbol = computerSymbol;
-        if (computerSymbol == 'O') {
-            playerSymbol = 'X';
-        } else {
-            playerSymbol = 'O';
-        }
+       
         int[] move = findBestMove(board.getBoard());
         return board.play(move[0], move[1], computerSymbol);
     }

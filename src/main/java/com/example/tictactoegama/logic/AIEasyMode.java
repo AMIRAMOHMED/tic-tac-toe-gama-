@@ -17,16 +17,12 @@ public class AIEasyMode implements AIMoodOption {
     @Override
     public int makeMove(PlayBoard board, char computerSymbol) {
         this.computerSymbol = computerSymbol;
-        if (computerSymbol == 'O') {
-            playerSymbol = 'X';
-        } else {
-            playerSymbol = 'O';
-        }
+
         int[] move = findWorstMove(board.getBoard());
         return board.play(move[0], move[1], computerSymbol);
     }
 
-    private boolean isMovesLeft(char board[][]) {
+    private boolean isMovesLeft(char[][] board) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (board[i][j] == '_') {
