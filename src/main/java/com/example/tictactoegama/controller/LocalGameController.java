@@ -1,13 +1,16 @@
 package com.example.tictactoegama.controller;
 
+import com.example.tictactoegama.models.PlayBoard;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
@@ -19,7 +22,10 @@ public class LocalGameController {
     Label playerXNametxt,playerONametxt;
     @FXML
     Text gameStatus;
-    char[][] game;
+    @FXML
+    private Line winnerLine;
+    private boolean gameEnded;
+    private PlayBoard playBoard;
     int XScore,OScore,numberOfPlayes;
     static String playerXName,playerOName;
     String currentPlayer;
@@ -27,7 +33,8 @@ public class LocalGameController {
     @FXML
     public void initialize() {
         int XScore=0,OScore=0;
-        game=new char[3][3];
+        playBoard = new PlayBoard();
+        gameEnded = false;
         numberOfPlayes=0;
         playerXNametxt.setText(playerXName);
         playerONametxt.setText(playerOName);
@@ -37,51 +44,30 @@ public class LocalGameController {
     public void handleButtonClick(ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
         if (clickedButton.getText().isEmpty()) {
-
             int row = GridPane.getRowIndex(clickedButton);
             int col = GridPane.getColumnIndex(clickedButton);
             if(numberOfPlayes%2==0) {
                 updateButtonStyle(clickedButton, "X");
                 gameStatus.setText(playerOName+"'s Turn");
                 currentPlayer=playerXName;
+                if(playBoard.play(row, col,'x')==1){
+                    endGame(currentPlayer);
+                }else
+                    numberOfPlayes++;
             }
             else {
                 updateButtonStyle(clickedButton, "O");
                 gameStatus.setText(playerXName+"'s Turn");
                 currentPlayer=playerOName;
+                if(playBoard.play(row, col,'o')==1){
+                    endGame(currentPlayer);
+                }else
+                    numberOfPlayes++;
             }
-            //clickedButton.setDisable(true);
-            if(checkWin(row, col)==1){
-                endGame(currentPlayer);
-            }else
-                numberOfPlayes++;
 
         }
     }
-
-
-    private int checkWin(int x, int y) {
-
-        game[x][y]=((numberOfPlayes%2)==0)?'x':'y';
-        if(numberOfPlayes>3){
-            if(game[x][0]==game[x][1]&&game[x][1]==game[x][2])
-                return 1;
-            else if(game[0][y]==game[1][y]&&game[0][y]==game[2][y])
-                return 1;
-            else if ((x+y)%2==0) {
-                if(game[0][0]==game[1][1]&&game[1][1]==game[2][2])
-                    return 1;
-                else if (game[0][2] == game[1][1] && game[1][1] == game[2][0]) {
-                    return 1;
-                }
-            }
-        }
-        if(numberOfPlayes==8){
-            System.out.println("draw");
-        }
-        return 0;
-
-    }
+    
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
             button.setStyle(
@@ -105,6 +91,9 @@ public class LocalGameController {
         String message = "Player " + winner + " wins!";
         gameStatus.setText(message);
         disableButtons();
+        gameEnded = true;
+        drawWinnerLine(playBoard.getWinningTiles());
+        winnerLine.setVisible(true);
     }
 
     private void disableButtons() {
@@ -113,5 +102,47 @@ public class LocalGameController {
                 ((Button) node).setDisable(true);
             }
         }
+    }
+
+
+    private void drawWinnerLine(int[][] winningTiles) {
+        if (winningTiles == null || winningTiles.length == 0) return;
+
+        // Get the starting and ending nodes of the winning line
+        Node startNode = getNodeByRowColumnIndex(winningTiles[0][0], winningTiles[0][1]);
+        Node endNode = getNodeByRowColumnIndex(winningTiles[2][0], winningTiles[2][1]);
+
+        if (startNode != null && endNode != null) {
+            // Get the position of the GridPane
+            Bounds gridPaneBounds = gameGrid.localToScene(gameGrid.getBoundsInLocal());
+
+            // Calculate the center points of the start and end nodes relative to the GridPane
+            double startX = startNode.getBoundsInParent().getMinX() + startNode.getBoundsInParent().getWidth() / 2;
+            double startY = startNode.getBoundsInParent().getMinY() + startNode.getBoundsInParent().getHeight() / 2;
+            double endX = endNode.getBoundsInParent().getMinX() + endNode.getBoundsInParent().getWidth() / 2;
+            double endY = endNode.getBoundsInParent().getMinY() + endNode.getBoundsInParent().getHeight() / 2;
+
+            // Adjust the winnerLine coordinates relative to the GridPane
+            winnerLine.setStartX(gridPaneBounds.getMinX() + startX);
+            winnerLine.setStartY(gridPaneBounds.getMinY() + startY);
+            winnerLine.setEndX(gridPaneBounds.getMinX() + endX);
+            winnerLine.setEndY(gridPaneBounds.getMinY() + endY);
+            winnerLine.setVisible(true);
+        }
+    }
+    private Node getNodeByRowColumnIndex(final int row, final int column) {
+        for (Node node : gameGrid.getChildren()) {
+            if (GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == row &&
+                    GridPane.getColumnIndex(node) != null && GridPane.getColumnIndex(node) == column) {
+                return node;
+            }
+        }
+        return null;
+    }
+    public void handleGotoHome(ActionEvent event) {
+
+    }
+
+    public void handleReplay(ActionEvent event) {
     }
 }

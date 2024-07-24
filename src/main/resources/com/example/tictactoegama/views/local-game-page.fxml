@@ -8,7 +8,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color:  X808080;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.LocalGameController">
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.effect.DropShadow?>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color:  X808080;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.controller.LocalGameController">
     <children>
         <Text fx:id="gameStatus" layoutX="325.0" layoutY="40.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #000000;" text="Tic Tac Toe" />
         <GridPane fx:id="gameGrid" hgap="10.0" layoutX="200.0" layoutY="151.0" prefHeight="400.0" prefWidth="400.0" vgap="10.0">
@@ -34,11 +36,18 @@
             <RowConstraints />
          </rowConstraints>
         </GridPane>
+        <Line fx:id="winnerLine" stroke="000000" strokeWidth="5" visible="false">
+            <effect>
+                <DropShadow color="#6e6e6e" radius="30"/>
+            </effect>
+        </Line>
       <Label fx:id="playerXNametxt" layoutX="75.0" layoutY="53.0" style="-fx-font-size: 24; -fx-text-fill: #46A3FF;" text="Player X" />
       <Label layoutX="75.0" layoutY="96.0" style="-fx-font-size: 18; -fx-text-fill: #46A3FF;" text="Score :" />
       <Label fx:id="playerONametxt" layoutX="600.0" layoutY="61.0" style="-fx-font-size: 24; -fx-text-fill: #FF827E;" text="Player O" />
       <Label layoutX="600.0" layoutY="104.0" style="-fx-font-size: 18; -fx-text-fill: #FF827E;" text="Score : " />
       <Label fx:id="XScoreLabel" layoutX="137.0" layoutY="96.0" style="-fx-font-size: 18; -fx-text-fill: #46A3FF;" text="0" />
       <Label fx:id="OScoreLabel" layoutX="666.0" layoutY="104.0" style="-fx-font-size: 18; -fx-text-fill: #FF827E;" text="0" />
+      <Button fx:id="gotoHomeBtn" layoutX="140.0" layoutY="255.0" mnemonicParsing="false" onAction="#handleGotoHome" prefHeight="44.0" prefWidth="262.0" style="-fx-background-color: #46A3FF; -fx-text-fill: #FFFFFF; -fx-background-radius: 10; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 20;" text="Return To Home Page" visible="false" />
+      <Button fx:id="replayBtn" layoutX="463.0" layoutY="255.0" mnemonicParsing="false" onAction="#handleReplay" prefHeight="44.0" prefWidth="178.0" style="-fx-background-color: #46A3FF; -fx-text-fill: #FFFFFF; -fx-background-radius: 10; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 20;" text="Replay" visible="false" />
     </children>
 </AnchorPane>

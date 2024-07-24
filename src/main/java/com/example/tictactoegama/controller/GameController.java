@@ -26,9 +26,7 @@ public class GameController {
 
     @FXML
     private GridPane gameGrid;
-
     @FXML
-
     private String currentPlayer;
     private String computerSymbol;
     private PlayBoard playBoard;
@@ -145,9 +143,6 @@ public class GameController {
         gameEnded = true;
         drawWinnerLine(playBoard.getWinningTiles());
         winnerLine.setVisible(true);
-
-
-
     }
 
     private void disableButtons() {
