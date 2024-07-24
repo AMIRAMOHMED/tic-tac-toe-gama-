@@ -28,8 +28,8 @@ public class GameController {
     private GridPane gameGrid;
 
     @FXML
-
     private String currentPlayer;
+    boolean isLocal;
     private String computerSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;
@@ -73,7 +73,7 @@ public class GameController {
             processPlayerMove(clickedButton, row, col);
 
             if (!gameEnded) {
-                PauseTransition pause = new PauseTransition(Duration.seconds(.2));
+                PauseTransition pause = new PauseTransition(Duration.seconds(0.1));
                 pause.setOnFinished(e -> processComputerMove());
                 pause.play();
             }
