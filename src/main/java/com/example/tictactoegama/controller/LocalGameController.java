@@ -5,39 +5,51 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class LocalGameController {
 
     @FXML
     GridPane gameGrid;
     @FXML
-    Label playerXNametxt,playerONametxt;
+    Label playerXNametxt,playerONametxt , OScoreLabel , XScoreLabel;
     @FXML
     Text gameStatus;
     @FXML
     private Line winnerLine;
+    @FXML
+    Button replayBtn, gotoHomeBtn;
+
     private boolean gameEnded;
     private PlayBoard playBoard;
-    int XScore,OScore,numberOfPlayes;
+    static int XScore,OScore;
+    int numberOfPlayes;
     static String playerXName,playerOName;
     String currentPlayer;
 
+
     @FXML
     public void initialize() {
-        int XScore=0,OScore=0;
         playBoard = new PlayBoard();
         gameEnded = false;
         numberOfPlayes=0;
         playerXNametxt.setText(playerXName);
         playerONametxt.setText(playerOName);
+        OScoreLabel.setText(""+OScore);
+        XScoreLabel.setText(""+XScore);
         gameStatus.setText(playerXName+"'s Turn");
     }
     @FXML
@@ -67,7 +79,7 @@ public class LocalGameController {
 
         }
     }
-    
+
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
             button.setStyle(
@@ -102,8 +114,31 @@ public class LocalGameController {
                 ((Button) node).setDisable(true);
             }
         }
+        replayBtn.setVisible(true);
+        gotoHomeBtn.setVisible(true);
+
     }
 
+    public void handleGotoHome(ActionEvent event) throws IOException {
+        Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/options_page.fxml"));
+        Scene optionPageScene = new Scene(optionPageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(optionPageScene);
+        window.show();
+    }
+
+    public void handleReplay(ActionEvent event) throws IOException {
+        if(currentPlayer==playerXName){
+            XScore+=1;
+        } else if (currentPlayer==playerOName) {
+            OScore+=1;
+        }
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/local-game-page.fxml"));
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
+    }
 
     private void drawWinnerLine(int[][] winningTiles) {
         if (winningTiles == null || winningTiles.length == 0) return;
@@ -139,10 +174,5 @@ public class LocalGameController {
         }
         return null;
     }
-    public void handleGotoHome(ActionEvent event) {
 
-    }
-
-    public void handleReplay(ActionEvent event) {
-    }
 }
