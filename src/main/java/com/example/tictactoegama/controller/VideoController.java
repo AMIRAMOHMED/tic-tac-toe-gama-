@@ -17,28 +17,23 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 
 /**
- *
- * @author Mohamed Fekry Khedr
+ * VideoController class to manage media playback.
+ * Author: Mohamed Fekry Khedr
  */
 public class VideoController implements Initializable {
-    
+
     @FXML
     private MediaView myMediaView;
     private File file;
     private Media media;
     private MediaPlayer mediaPlayer;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        file = new File("D:\\ITI\\java\\tasks\\xo\\filo-test.mp4");
+        file = new File("/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.37.18.mp4");
         media = new Media(file.toURI().toString());
-        
         mediaPlayer = new MediaPlayer(media);
-        
         myMediaView.setMediaPlayer(mediaPlayer);
-        //myMediaView.setFitWidth(media.getWidth());
-        
         mediaPlayer.play();
-    }    
-    
+    }
 }
