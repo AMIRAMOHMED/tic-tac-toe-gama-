@@ -18,6 +18,7 @@ public class OptionsController {
         window.setScene(gamePageScene);
         window.show();
     }
+    
 
 
 }
