@@ -43,10 +43,6 @@ public class GameController {
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
-
-        if (aiMoodOption != null) {
-            difficultyLabel.setText("Difficulty: " + aiMoodOption.getClass().getSimpleName());
-        }
     }
 
     public void setAiMoodOption(AIMoodOption aiMoodOption) {
