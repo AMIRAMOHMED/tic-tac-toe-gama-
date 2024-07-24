@@ -36,13 +36,15 @@ public class GameController {
     private GridPane gameGrid;
     @FXML
     private String currentPlayer;
+    @FXML
+    Button replayBtn;
     private Scene originalGameScene;
     private  boolean isDraw;
     boolean isLocal;
     private String computerSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;
-    private AIMoodOption aiMoodOption;
+    private static AIMoodOption aiMoodOption;
     @FXML
     private Line winnerLine;
     private Label difficultyLabel;
@@ -52,6 +54,7 @@ public class GameController {
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
+
     }
 
     public void setAiMoodOption(AIMoodOption aiMoodOption) {
@@ -87,6 +90,22 @@ public class GameController {
                 pause.play();
             }
         }
+    }
+
+    public void handleGoBack(ActionEvent event) throws IOException {
+        Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/choose_level-view.fxml"));
+        Scene optionPageScene = new Scene(optionPageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(optionPageScene);
+        window.show();
+    }
+
+    public void handleReplay(ActionEvent event) throws IOException {
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
     }
 
     private void processPlayerMove(Button clickedButton, int row, int col) {
@@ -188,6 +207,7 @@ public class GameController {
                 node.setDisable(true);
             }
         }
+        replayBtn.setVisible(true);
     }
 
 

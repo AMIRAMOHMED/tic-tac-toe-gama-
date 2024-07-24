@@ -32,6 +32,13 @@ public class LevelController {
         mediumButton.setOnAction(e -> handleButtonActionChooseLevel(e, new MediumMood()));
         hardButton.setOnAction(e -> handleButtonActionChooseLevel(e, new AIHardMode()));
     }
+    public void handleGoBack(ActionEvent event) throws IOException {
+        Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/options_page.fxml"));
+        Scene optionPageScene = new Scene(optionPageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(optionPageScene);
+        window.show();
+    }
 
     private void handleButtonActionChooseLevel(ActionEvent event, AIMoodOption aiMoodOption) {
         try {

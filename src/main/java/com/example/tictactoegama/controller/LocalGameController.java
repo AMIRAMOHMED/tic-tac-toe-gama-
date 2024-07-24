@@ -115,11 +115,12 @@ public class LocalGameController {
             }
         }
         replayBtn.setVisible(true);
-        gotoHomeBtn.setVisible(true);
 
     }
 
     public void handleGotoHome(ActionEvent event) throws IOException {
+        XScore=0;
+        OScore=0;
         Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/options_page.fxml"));
         Scene optionPageScene = new Scene(optionPageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
