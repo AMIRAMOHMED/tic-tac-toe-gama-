@@ -27,6 +27,8 @@ import java.io.IOException;
 
 public class GameController {
 
+
+
     @FXML
     private Text gameStatus;
 
@@ -35,6 +37,8 @@ public class GameController {
 
     @FXML
     private String currentPlayer;
+    private Scene originalGameScene;
+    private  boolean isDraw;
     boolean isLocal;
     private String computerSymbol;
     private PlayBoard playBoard;
@@ -90,16 +94,23 @@ public class GameController {
     private void processPlayerMove(Button clickedButton, int row, int col) {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
-        
+        int flag = playBoard.play(row,col,currentPlayer.charAt(0));
 
-        if (playBoard.play(row, col, currentPlayer.charAt(0))== 1) {
+        if (flag== 1) {
             endGame(currentPlayer);
+        }
+        if (flag== 0) {
+            endGame("draw");
         }
     }
 
     private void processComputerMove() {
-        if (aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0))==1) {
+        int flag = aiMoodOption.makeMove(playBoard,computerSymbol.charAt(0));
+        if (flag==1) {
             endGame(computerSymbol);
+        }
+        else if (flag==0){
+            endGame("draw");
         }
         updateBoardUI();
     }
@@ -142,16 +153,36 @@ public class GameController {
 
 
     private void endGame(String winner) {
-        String message = "Player " + winner + " wins!";
-        gameStatus.setText(message);
+
+        String videoPath = "";
+
+
+        if (winner.equals(currentPlayer)) {
+
+            videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.37.18.mp4";
+        } else if (winner.equals(computerSymbol)) {
+
+            videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.22.37.mp4";
+        } else if (winner.equals("draw")) {
+
+            videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.22.46.mp4";
+        } else {
+            return;
+        }
+
+
         disableButtons();
         gameEnded = true;
         drawWinnerLine(playBoard.getWinningTiles());
         winnerLine.setVisible(true);
 
+        final String finalVideoPath = videoPath;
+        PauseTransition delay = new PauseTransition(Duration.seconds(1));
+        delay.setOnFinished(event -> showVideoView(finalVideoPath));
 
-
+        delay.play();
     }
+
 
     private void disableButtons() {
         for (Node node : gameGrid.getChildren()) {
@@ -185,7 +216,7 @@ public class GameController {
             winnerLine.setEndX(gridPaneBounds.getMinX() + endX);
             winnerLine.setEndY(gridPaneBounds.getMinY() + endY);
             winnerLine.setVisible(true);
-            showVideoView();
+
         }
     }
 
@@ -199,18 +230,42 @@ public class GameController {
         }
         return null;
     }
-    private void showVideoView() {
+    private void showVideoView(String videoPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/Video.fxml")); // Update this path
+            // Store the original game scene
+            originalGameScene = gameGrid.getScene();
+
+            // Load the video view
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/Video.fxml"));
             Parent videoRoot = loader.load();
             Stage stage = (Stage) gameGrid.getScene().getWindow();
-            Scene scene = new Scene(videoRoot);
-            stage.setScene(scene);
+            Scene videoScene = new Scene(videoRoot);
+
+            // Get the VideoController and set the stage, previous scene, and video path
+            VideoController videoController = loader.getController();
+            videoController.setStageAndPreviousScene(stage, originalGameScene);
+            videoController.setVideoPath(videoPath);
+
+            // Set the video scene
+            stage.setScene(videoScene);
+
+            // Pause for 10 seconds
+            PauseTransition pause = new PauseTransition(Duration.seconds(10));
+            pause.setOnFinished(event -> {
+                // Switch back to the original game scene
+                stage.setScene(originalGameScene);
+            });
+            pause.play();
+
         } catch (IOException e) {
             e.printStackTrace(); // Handle exceptions
         }
     }
+
+
 }
+
+
 
 
 

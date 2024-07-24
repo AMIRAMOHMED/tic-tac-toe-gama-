@@ -3,15 +3,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.media.MediaView?>
 
-<AnchorPane id="AnchorPane" prefHeight="400" prefWidth="700"
+<AnchorPane id="AnchorPane" prefHeight="600" prefWidth="800"
             xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.example.tictactoegama.controller.VideoController">
    <children>
-      <MediaView fx:id="myMediaView" fitHeight="400.0" fitWidth="700.0"
-                 layoutX="291.0" layoutY="188.0"
-                 AnchorPane.bottomAnchor="212.0"
-                 AnchorPane.leftAnchor="50.0"
-                 AnchorPane.rightAnchor="89.60000000000002"
-                 AnchorPane.topAnchor="50.0" />
+      <MediaView fx:id="myMediaView"
+                 AnchorPane.bottomAnchor="0.0"
+                 AnchorPane.leftAnchor="0.0"
+                 AnchorPane.rightAnchor="0.0"
+                 AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>
