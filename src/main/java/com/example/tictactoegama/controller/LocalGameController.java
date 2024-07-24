@@ -163,11 +163,16 @@ public class LocalGameController {
         } else if (currentPlayer==playerOName) {
             OScore+=1;
         }
-        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/local-game-page.fxml"));
+        // Clear the game grid and reset the game state
+
+        resetGame();
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource(
+                "/com/example/tictactoegama/views/local-game-page.fxml"));
         Scene gamePageScene = new Scene(gamePageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gamePageScene);
         window.show();
+
     }
 
     private void drawWinnerLine(int[][] winningTiles) {
@@ -204,5 +209,30 @@ public class LocalGameController {
         }
         return null;
     }
+    private void resetGame() {
+        // Clear all buttons from the grid
+        for (Node node : gameGrid.getChildren()) {
+            if (node instanceof Button) { // Check if the node is a Button
+                ((Button) node).setText(""); // Clear the text of the button
+                node.setDisable(false); // Enable the button
+                node.setStyle(""); // Reset button style if needed
+            }
+        }
 
+        // Reset game state variables
+        gameEnded = false;
+        numberOfPlayes = 0;
+        playBoard = new PlayBoard();
+        currentPlayer = playerXName;
+
+        // Reset UI elements
+        playerXNametxt.setText(playerXName);
+        playerONametxt.setText(playerOName);
+        OScoreLabel.setText("" + OScore);
+        XScoreLabel.setText("" + XScore);
+        gameStatus.setText(playerXName + "'s Turn");
+        winnerLine.setVisible(false);
+        replayBtn.setVisible(false);
+        gotoHomeBtn.setVisible(false);
+    }
 }
