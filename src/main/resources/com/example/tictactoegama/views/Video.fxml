@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.media.MediaView?>
+
+<AnchorPane id="AnchorPane" prefHeight="318.0" prefWidth="402.0" style="-fx-min-width: 800; -fx-min-height: 600;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xo.VideoController">
+   <children>
+      <MediaView fx:id="myMediaView" fitHeight="500.0" fitWidth="700.0" layoutX="291.0" layoutY="188.0" AnchorPane.bottomAnchor="212.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="89.60000000000002" AnchorPane.topAnchor="50.0" />
+   </children>
+</AnchorPane>
