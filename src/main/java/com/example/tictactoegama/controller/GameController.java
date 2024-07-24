@@ -7,16 +7,22 @@ import com.example.tictactoegama.views.SymbolSelectionDialog;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
+
+import java.io.IOException;
 
 
 public class GameController {
@@ -43,6 +49,7 @@ public class GameController {
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
+
     }
 
     public void setAiMoodOption(AIMoodOption aiMoodOption) {
@@ -178,6 +185,7 @@ public class GameController {
             winnerLine.setEndX(gridPaneBounds.getMinX() + endX);
             winnerLine.setEndY(gridPaneBounds.getMinY() + endY);
             winnerLine.setVisible(true);
+            showVideoView();
         }
     }
 
@@ -191,7 +199,17 @@ public class GameController {
         }
         return null;
     }
-
+    private void showVideoView() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/Video.fxml")); // Update this path
+            Parent videoRoot = loader.load();
+            Stage stage = (Stage) gameGrid.getScene().getWindow();
+            Scene scene = new Scene(videoRoot);
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace(); // Handle exceptions
+        }
+    }
 }
 
 
