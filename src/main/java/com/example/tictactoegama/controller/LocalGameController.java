@@ -1,101 +1,84 @@
 package com.example.tictactoegama.controller;
 
-import com.example.tictactoegama.interfaces.AIMoodOption;
-import com.example.tictactoegama.logic.MediumMood;
 import com.example.tictactoegama.models.PlayBoard;
-import com.example.tictactoegama.views.SymbolSelectionDialog;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
-import javafx.animation.PauseTransition;
-import javafx.scene.Node;
 import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.io.IOException;
 
-public class GameController {
+public class LocalGameController {
 
     @FXML
-    private Text gameStatus;
-
+    GridPane gameGrid;
     @FXML
-    private GridPane gameGrid;
+    Label playerXNametxt,playerONametxt , OScoreLabel , XScoreLabel;
     @FXML
-    private String currentPlayer;
-    boolean isLocal;
-    private String computerSymbol;
-    private PlayBoard playBoard;
-    private boolean gameEnded;
-    private AIMoodOption aiMoodOption;
+    Text gameStatus;
     @FXML
     private Line winnerLine;
-    private Label difficultyLabel;
+    @FXML
+    Button replayBtn, gotoHomeBtn;
+
+    private boolean gameEnded;
+    private PlayBoard playBoard;
+    static int XScore,OScore;
+    int numberOfPlayes;
+    static String playerXName,playerOName;
+    String currentPlayer;
+
 
     @FXML
     public void initialize() {
-        Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
+        numberOfPlayes=0;
+        playerXNametxt.setText(playerXName);
+        playerONametxt.setText(playerOName);
+        OScoreLabel.setText(""+OScore);
+        XScoreLabel.setText(""+XScore);
+        gameStatus.setText(playerXName+"'s Turn");
     }
-
-    public void setAiMoodOption(AIMoodOption aiMoodOption) {
-        this.aiMoodOption = aiMoodOption;
-    }
-
-
-    private void showSymbolSelectionDialog() {
-        SymbolSelectionDialog dialog = new SymbolSelectionDialog(this);
-        dialog.show();
-    }
-
-    public void handleSymbolSelection(String playerSymbol, String compSymbol) {
-        currentPlayer = playerSymbol;
-        computerSymbol = compSymbol;
-        gameStatus.setText("Current Player: " + currentPlayer);
-    }
-
     @FXML
-    private void handleButtonClick(ActionEvent event) {
-        if (gameEnded) {  disableButtons();}
-
+    public void handleButtonClick(ActionEvent event) {
         Button clickedButton = (Button) event.getSource();
         if (clickedButton.getText().isEmpty()) {
             int row = GridPane.getRowIndex(clickedButton);
             int col = GridPane.getColumnIndex(clickedButton);
-
-            processPlayerMove(clickedButton, row, col);
-
-            if (!gameEnded) {
-                PauseTransition pause = new PauseTransition(Duration.seconds(0.1));
-                pause.setOnFinished(e -> processComputerMove());
-                pause.play();
+            if(numberOfPlayes%2==0) {
+                updateButtonStyle(clickedButton, "X");
+                gameStatus.setText(playerOName+"'s Turn");
+                currentPlayer=playerXName;
+                if(playBoard.play(row, col,'x')==1){
+                    endGame(currentPlayer);
+                }else
+                    numberOfPlayes++;
             }
+            else {
+                updateButtonStyle(clickedButton, "O");
+                gameStatus.setText(playerXName+"'s Turn");
+                currentPlayer=playerOName;
+                if(playBoard.play(row, col,'o')==1){
+                    endGame(currentPlayer);
+                }else
+                    numberOfPlayes++;
+            }
+
         }
     }
-
-    private void processPlayerMove(Button clickedButton, int row, int col) {
-        clickedButton.setText(currentPlayer);
-        updateButtonStyle(clickedButton, currentPlayer);
-        
-
-        if (playBoard.play(row, col, currentPlayer.charAt(0))== 1) {
-            endGame(currentPlayer);
-        }
-    }
-
-    private void processComputerMove() {
-        if (aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0))==1) {
-            endGame(computerSymbol);
-        }
-        updateBoardUI();
-    }
-
 
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
@@ -105,6 +88,7 @@ public class GameController {
                             "-fx-font-size: 36px; " +
                             "-fx-border-color: #E3E3E3;"
             );
+            button.setText("X");
         } else if ("O".equals(symbol)) {
             button.setStyle(
                     "-fx-background-color: rgba(255, 130, 126, 0.2); " +
@@ -112,27 +96,9 @@ public class GameController {
                             "-fx-font-size: 36px; " +
                             "-fx-border-color: #E3E3E3;"
             );
+            button.setText("O");
         }
     }
-
-    private void updateBoardUI() {
-        char[][] board = playBoard.getBoard();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                char symbol = board[i][j];
-                if (symbol != '_') {
-                    Button button = (Button) getNodeByRowColumnIndex(i, j);
-                    if (button != null) {
-                        button.setText(String.valueOf(symbol));
-                        updateButtonStyle(button, String.valueOf(symbol));
-                    }
-                }
-            }
-        }
-    }
-
-
-
     private void endGame(String winner) {
         String message = "Player " + winner + " wins!";
         gameStatus.setText(message);
@@ -145,11 +111,34 @@ public class GameController {
     private void disableButtons() {
         for (Node node : gameGrid.getChildren()) {
             if (node instanceof Button) {
-                node.setDisable(true);
+                ((Button) node).setDisable(true);
             }
         }
+        replayBtn.setVisible(true);
+        gotoHomeBtn.setVisible(true);
+
     }
 
+    public void handleGotoHome(ActionEvent event) throws IOException {
+        Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/options_page.fxml"));
+        Scene optionPageScene = new Scene(optionPageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(optionPageScene);
+        window.show();
+    }
+
+    public void handleReplay(ActionEvent event) throws IOException {
+        if(currentPlayer==playerXName){
+            XScore+=1;
+        } else if (currentPlayer==playerOName) {
+            OScore+=1;
+        }
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/local-game-page.fxml"));
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
+    }
 
     private void drawWinnerLine(int[][] winningTiles) {
         if (winningTiles == null || winningTiles.length == 0) return;
@@ -176,8 +165,6 @@ public class GameController {
             winnerLine.setVisible(true);
         }
     }
-
-
     private Node getNodeByRowColumnIndex(final int row, final int column) {
         for (Node node : gameGrid.getChildren()) {
             if (GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == row &&
@@ -189,13 +176,3 @@ public class GameController {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
