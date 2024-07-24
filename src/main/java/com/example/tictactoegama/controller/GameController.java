@@ -38,8 +38,6 @@ public class GameController {
     private GridPane gameGrid;
     @FXML
     private String currentPlayer;
-    private Scene originalGameScene;
-
     private String computerSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;

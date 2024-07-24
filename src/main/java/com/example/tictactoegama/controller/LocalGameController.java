@@ -1,6 +1,7 @@
 package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.models.PlayBoard;
+import com.example.tictactoegama.models.VideoViewHandler;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -37,6 +38,7 @@ public class LocalGameController {
     private PlayBoard playBoard;
     static int XScore,OScore;
     int numberOfPlayes;
+    private VideoViewHandler videoViewHandler;
     static String playerXName,playerOName;
     String currentPlayer;
 
@@ -50,6 +52,7 @@ public class LocalGameController {
         playerONametxt.setText(playerOName);
         OScoreLabel.setText(""+OScore);
         XScoreLabel.setText(""+XScore);
+        videoViewHandler = new VideoViewHandler();
         gameStatus.setText(playerXName+"'s Turn");
     }
     @FXML
@@ -62,19 +65,27 @@ public class LocalGameController {
                 updateButtonStyle(clickedButton, "X");
                 gameStatus.setText(playerOName+"'s Turn");
                 currentPlayer=playerXName;
-                if(playBoard.play(row, col,'x')==1){
+                int flag = (playBoard.play(row, col,'x'));
+                if(flag==1){
+
                     endGame(currentPlayer);
-                }else
+                }else if (flag ==0) endGame("draw");
+                else
                     numberOfPlayes++;
             }
             else {
                 updateButtonStyle(clickedButton, "O");
                 gameStatus.setText(playerXName+"'s Turn");
                 currentPlayer=playerOName;
-                if(playBoard.play(row, col,'o')==1){
+                int flag = (playBoard.play(row, col,'o'));
+                if(flag==1){
                     endGame(currentPlayer);
-                }else
-                    numberOfPlayes++;
+                }else if (flag==0)
+                {
+                    endGame("draw");
+
+                }else{  numberOfPlayes++;}
+
             }
 
         }
@@ -101,11 +112,30 @@ public class LocalGameController {
     }
     private void endGame(String winner) {
         String message = "Player " + winner + " wins!";
+        String videoPath ="";
+        if (winner.equals("draw")) {  // Handle draw condition
+            message = "It's a draw!";
+            videoPath = "src/main/resources/com/example/tictactoegama/videos/video_draw2.mp4";
+        } else {  // Handle win condition
+            message = "Player " + winner + " wins!";
+            videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
+        }
+
         gameStatus.setText(message);
         disableButtons();
         gameEnded = true;
         drawWinnerLine(playBoard.getWinningTiles());
         winnerLine.setVisible(true);
+        final String finalVideoPath = videoPath;
+        PauseTransition delay = new PauseTransition(Duration.seconds(1));
+        delay.setOnFinished(event -> {
+
+            Stage stage = (Stage) gameGrid.getScene().getWindow();
+            videoViewHandler.showVideoView(stage, finalVideoPath, gameGrid.getScene());
+        } );
+
+
+        delay.play();
     }
 
     private void disableButtons() {
