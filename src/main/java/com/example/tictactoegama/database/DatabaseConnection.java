@@ -20,7 +20,7 @@ con = DriverManager.getConnection(url,userName,password);
         }
     }
 
-    public  ResultSet executeQuery(String query){
+    public  ResultSet getData(String query){
         try {
             Statement stm =con.createStatement();
             return  stm.executeQuery(query);
