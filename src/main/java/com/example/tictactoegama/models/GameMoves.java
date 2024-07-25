@@ -1,6 +1,5 @@
 package com.example.tictactoegama.models;
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameMoves {
     private String player1;
@@ -25,7 +24,7 @@ public class GameMoves {
     public void setPlayer2(String player2) {
         this.player2 = player2;
     }
-    public List<Integer> getMoves() {
+    public ArrayList<Integer> getMoves() {
         return moves;
     }
     public void setMoves(ArrayList<Integer> moves) {
@@ -36,7 +35,7 @@ public class GameMoves {
         String gamemoves = "";
         for(int i =0;i<moves.size();i++){
             gamemoves += ""+ moves.get(i) + ",";
-        }
+        } 
         return "player1=" + player1 + ",player2=" + player2 + "," + gamemoves + "";
     }
 
