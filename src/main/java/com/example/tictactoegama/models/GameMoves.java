@@ -41,11 +41,8 @@ public class GameMoves {
 
     public void toGameMoves(String query){
         String[] splitted = query.split(",");
-        for(String i : splitted){
-            System.out.println(i);
-        }
-        this.player1 = splitted[0].substring(splitted[0].indexOf("=")+1,splitted[0].length());
-        this.player2 = splitted[1].substring(splitted[1].indexOf("=")+1,splitted[1].length());
+        player1 = splitted[0].substring(splitted[0].indexOf("=")+1,splitted[0].length());
+        player2 = splitted[1].substring(splitted[1].indexOf("=")+1,splitted[1].length());
         ArrayList<Integer> amoves = new ArrayList<Integer>();
         for(int i = 2 ; i<splitted.length;i++){
             amoves.add(Integer.parseInt(splitted[i]));
