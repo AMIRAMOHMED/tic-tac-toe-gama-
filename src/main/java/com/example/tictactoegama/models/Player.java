@@ -1,6 +1,9 @@
 package com.example.tictactoegama.models;
 
+import org.json.JSONObject;
+
 public class Player {
+    JSONObject gda;
     private int userid;
     private String username;
     private boolean isloggedin;
@@ -10,8 +13,7 @@ public class Player {
     private int draws;
     private int losses;
     private int score;
-    public Player(int userid, String username, boolean isloggedin, boolean isingame, boolean gamesplayed, int wins,
-            int draws, int losses) {
+    public Player(int userid, String username, boolean isloggedin, boolean isingame, boolean gamesplayed, int wins, int draws, int losses) {
         this.userid = userid;
         this.username = username;
         this.isloggedin = isloggedin;
@@ -88,8 +90,8 @@ public class Player {
                 + losses + ", score=" + score ;
     }
 
-    public void toPlayer(){
-        
+    public void toPlayer(String query){
+        String[] spiltted = query.split(",");
     }
     
 

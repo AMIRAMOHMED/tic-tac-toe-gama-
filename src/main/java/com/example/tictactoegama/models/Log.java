@@ -1,7 +1,5 @@
 package com.example.tictactoegama.models;
-
 import java.util.Date;
-
 public class Log {
     private int gameid;
     private int userid;
@@ -50,7 +48,9 @@ public class Log {
         return "gameid=" + gameid + ", userid=" + userid + ", opponentid=" + opponentid + ", gameDate=" + gameDate
                 + ", gameMoves=" + gameMoves;
     }
-    public void toLogs(){
+    public void toLogs(String query){
+        String[] splitted = query.split(",");
+
         
     }
     

@@ -1,6 +1,12 @@
 package com.example.tictactoegama.models;
 
+import org.json.JSONObject;
+
+import com.google.gson.JsonObject;
+
 public class User {
+
+    JsonObject adg;
     private int userid;
     private String username;
     private String email;
