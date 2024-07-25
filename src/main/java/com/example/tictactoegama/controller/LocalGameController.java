@@ -131,7 +131,7 @@ public class LocalGameController {
         delay.setOnFinished(event -> {
 
             Stage stage = (Stage) gameGrid.getScene().getWindow();
-            videoViewHandler.showVideoView(stage, finalVideoPath, gameGrid.getScene());
+            videoViewHandler.showVideoView(stage, finalVideoPath);
         } );
 
 

@@ -21,22 +21,13 @@ public class VideoController implements Initializable {
     @FXML
     private MediaView myMediaView;
     private File file;
-    private Stage stage;
     private Media media;
     private MediaPlayer mediaPlayer;
-    private Scene previousScene;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Initialization logic if needed
-    }
-
-    public void setStageAndPreviousScene(Stage stage, Scene previousScene) {
-        this.stage = stage;
-        this.previousScene = previousScene;
-
-        // Register the window close request handler
-        stage.setOnCloseRequest(this::handleWindowCloseRequest);
     }
 
     public void setVideoPath(String videoPath) {
@@ -46,19 +37,23 @@ public class VideoController implements Initializable {
         myMediaView.setMediaPlayer(mediaPlayer);
         mediaPlayer.play();
     }
-
-    private void handleWindowCloseRequest(WindowEvent event) {
-        // Stop media playback
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
-
-        // Prevent the default close operation
-        event.consume();
-
-        // Switch back to the previous scene
-        if (stage != null && previousScene != null) {
-            stage.setScene(previousScene);
-        }
+    
+    public void closeVid(){
+        mediaPlayer.dispose();
     }
+
+    // private void handleWindowCloseRequest(WindowEvent event) {
+    //     // Stop media playback
+    //     if (mediaPlayer != null) {
+    //         mediaPlayer.stop();
+    //     }
+
+    //     // Prevent the default close operation
+    //     event.consume();
+
+    //     // Switch back to the previous scene
+    //     if (stage != null && previousScene != null) {
+    //         stage.setScene(previousScene);
+    //     }
+    // }
 }

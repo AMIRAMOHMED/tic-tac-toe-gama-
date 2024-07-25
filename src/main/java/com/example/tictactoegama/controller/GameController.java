@@ -200,8 +200,9 @@ String videoPath ="";
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
         delay.setOnFinished(event -> {
 
-            Stage stage = (Stage) gameGrid.getScene().getWindow();
-            videoViewHandler.showVideoView(stage, finalVideoPath, gameGrid.getScene());
+            Stage stage = new Stage();
+            videoViewHandler.showVideoView(stage, finalVideoPath);
+            stage.show();
         } );
 
 
