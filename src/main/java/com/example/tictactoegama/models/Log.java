@@ -1,3 +1,4 @@
-public class log {
+package com.example.tictactoegama.models;
+public class Log {
 
 }
