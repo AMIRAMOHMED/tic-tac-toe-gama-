@@ -3,6 +3,7 @@ package com.example.tictactoegama.controller;
 import com.example.tictactoegama.interfaces.AIMoodOption;
 import com.example.tictactoegama.logic.MediumMood;
 import com.example.tictactoegama.models.PlayBoard;
+import com.example.tictactoegama.models.VideoViewHandler;
 import com.example.tictactoegama.views.SymbolSelectionDialog;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -25,6 +26,7 @@ import javafx.scene.shape.Line;
 import java.io.IOException;
 
 
+
 public class GameController {
 
 
@@ -44,16 +46,20 @@ public class GameController {
     private String computerSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;
-    private static AIMoodOption aiMoodOption;
+    private VideoViewHandler videoViewHandler;
+
+    private AIMoodOption aiMoodOption;
+
     @FXML
     private Line winnerLine;
-    private Label difficultyLabel;
+
 
     @FXML
     public void initialize() {
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
+        videoViewHandler = new VideoViewHandler();
 
     }
 
@@ -171,16 +177,17 @@ public class GameController {
 
     private void endGame(String winner) {
 
-        String videoPath = "";
-
-
+String videoPath ="";
         if (winner.equals(currentPlayer)) {
+            videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
 
             videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.37.18.mp4";
         } else if (winner.equals(computerSymbol)) {
 
-            videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.22.37.mp4";
+            videoPath ="src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
         } else if (winner.equals("draw")) {
+            videoPath =
+            "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
 
             videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.22.46.mp4";
         } else {
@@ -195,7 +202,12 @@ public class GameController {
 
         final String finalVideoPath = videoPath;
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
-        delay.setOnFinished(event -> showVideoView(finalVideoPath));
+        delay.setOnFinished(event -> {
+
+            Stage stage = (Stage) gameGrid.getScene().getWindow();
+            videoViewHandler.showVideoView(stage, finalVideoPath, gameGrid.getScene());
+        } );
+
 
         delay.play();
     }
@@ -247,40 +259,40 @@ public class GameController {
         }
         return null;
     }
-    private void showVideoView(String videoPath) {
-        try {
-            // Store the original game scene
-            originalGameScene = gameGrid.getScene();
-
-            // Load the video view
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/Video.fxml"));
-            Parent videoRoot = loader.load();
-            Stage stage = (Stage) gameGrid.getScene().getWindow();
-            Scene videoScene = new Scene(videoRoot);
-
-            // Get the VideoController and set the stage, previous scene, and video path
-            VideoController videoController = loader.getController();
-            videoController.setStageAndPreviousScene(stage, originalGameScene);
-            videoController.setVideoPath(videoPath);
-
-            // Set the video scene
-            stage.setScene(videoScene);
-
-            // Pause for 10 seconds
-            PauseTransition pause = new PauseTransition(Duration.seconds(10));
-            pause.setOnFinished(event -> {
-                // Switch back to the original game scene
-                stage.setScene(originalGameScene);
-            });
-            pause.play();
-
-        } catch (IOException e) {
-            e.printStackTrace(); // Handle exceptions
-        }
+//    private void showVideoView(String videoPath) {
+//        try {
+//            // Store the original game scene
+//            originalGameScene = gameGrid.getScene();
+//
+//            // Load the video view
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/Video.fxml"));
+//            Parent videoRoot = loader.load();
+//            Stage stage = (Stage) gameGrid.getScene().getWindow();
+//            Scene videoScene = new Scene(videoRoot);
+//
+//            // Get the VideoController and set the stage, previous scene, and video path
+//            VideoController videoController = loader.getController();
+//            videoController.setStageAndPreviousScene(stage, originalGameScene);
+//            videoController.setVideoPath(videoPath);
+//
+//            // Set the video scene
+//            stage.setScene(videoScene);
+//
+//            // Pause for 10 seconds
+//            PauseTransition pause = new PauseTransition(Duration.seconds(10));
+//            pause.setOnFinished(event -> {
+//                // Switch back to the original game scene
+//                stage.setScene(originalGameScene);
+//            });
+//            pause.play();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace(); // Handle exceptions
+//        }
     }
 
 
-}
+
 
 
 
