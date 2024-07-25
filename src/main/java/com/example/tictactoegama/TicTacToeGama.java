@@ -15,6 +15,9 @@ public class TicTacToeGama extends Application {
         stage.setTitle("Tic Tac Toe");
         stage.setScene(scene);
         stage.show();
+        stage.setResizable(
+            false
+        );
     }
 
     public static void main(String[] args) {
