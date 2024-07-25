@@ -20,7 +20,6 @@ public class VideoController implements Initializable {
 
     @FXML
     private MediaView myMediaView;
-
     private File file;
     private Stage stage;
     private Media media;

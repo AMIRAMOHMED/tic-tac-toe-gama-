@@ -48,7 +48,7 @@ public class GameController {
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
 
-    private AIMoodOption aiMoodOption;
+    private static AIMoodOption aiMoodOption;
 
     @FXML
     private Line winnerLine;
@@ -181,15 +181,11 @@ String videoPath ="";
         if (winner.equals(currentPlayer)) {
             videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
 
-            videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.37.18.mp4";
         } else if (winner.equals(computerSymbol)) {
-
             videoPath ="src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
         } else if (winner.equals("draw")) {
             videoPath =
             "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
-
-            videoPath = "/Users/interlink/Downloads/WhatsApp Video 2024-07-23 at 01.22.46.mp4";
         } else {
             return;
         }
