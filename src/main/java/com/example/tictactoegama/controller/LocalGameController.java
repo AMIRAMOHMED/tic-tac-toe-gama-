@@ -130,8 +130,9 @@ public class LocalGameController {
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
         delay.setOnFinished(event -> {
 
-            Stage stage = (Stage) gameGrid.getScene().getWindow();
+            Stage stage = new Stage();
             videoViewHandler.showVideoView(stage, finalVideoPath);
+            stage.show();
         } );
 
 
