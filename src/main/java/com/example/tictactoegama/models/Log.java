@@ -1,11 +1,15 @@
 package com.example.tictactoegama.models;
 import java.util.Date;
+
+import org.json.JSONObject;
 public class Log {
     private int gameid;
     private int userid;
     private int opponentid;
     private Date gameDate;
     private GameMoves gameMoves;
+    public Log() {
+    }
     public Log(int gameid, int userid, int opponentid, Date gameDate, GameMoves gameMoves) {
         this.gameid = gameid;
         this.userid = userid;
@@ -43,15 +47,18 @@ public class Log {
     public void setGameMoves(GameMoves gameMoves) {
         this.gameMoves = gameMoves;
     }
+
     @Override
     public String toString() {
-        return "gameid=" + gameid + ", userid=" + userid + ", opponentid=" + opponentid + ", gameDate=" + gameDate
-                + ", gameMoves=" + gameMoves;
+        return "{\"gameid\":" + gameid + ", \"userid\":" + userid + ", \"opponentid\":" + opponentid + ", \"gameDate\":" + gameDate
+                + ", \"gameMoves\":[" + gameMoves.toString() + "]}";
     }
     public void toLogs(String query){
-        String[] splitted = query.split(",");
-
-        
+        JSONObject object = new JSONObject(query);
+        gameid = object.getInt("gameid");
+        userid = object.getInt("userid");
+        opponentid = object.getInt("opponentid");
+        gameDate = (Date) object.get("gameDate");
+        gameMoves.toGameMoves(object.getString("gameMoves"));
     }
-    
 }

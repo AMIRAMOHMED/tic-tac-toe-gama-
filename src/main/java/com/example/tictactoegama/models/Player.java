@@ -12,6 +12,8 @@ public class Player {
     private int draws;
     private int losses;
     private int score;
+    public Player() {
+    }
     public Player(int userid, String username, boolean isloggedin, boolean isingame, int gamesplayed, int wins, int draws, int losses) {
         this.userid = userid;
         this.username = username;
