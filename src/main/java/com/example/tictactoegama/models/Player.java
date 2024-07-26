@@ -3,17 +3,16 @@ package com.example.tictactoegama.models;
 import org.json.JSONObject;
 
 public class Player {
-    JSONObject gda;
     private int userid;
     private String username;
     private boolean isloggedin;
     private boolean isingame;
-    private boolean gamesplayed;
+    private int gamesplayed;
     private int wins;
     private int draws;
     private int losses;
     private int score;
-    public Player(int userid, String username, boolean isloggedin, boolean isingame, boolean gamesplayed, int wins, int draws, int losses) {
+    public Player(int userid, String username, boolean isloggedin, boolean isingame, int gamesplayed, int wins, int draws, int losses) {
         this.userid = userid;
         this.username = username;
         this.isloggedin = isloggedin;
@@ -24,6 +23,18 @@ public class Player {
         this.losses = losses;
         score = wins - losses;
     }
+    public Player(String username, boolean isloggedin, boolean isingame, int gamesplayed, int wins, int draws,
+            int losses, int score) {
+        this.username = username;
+        this.isloggedin = isloggedin;
+        this.isingame = isingame;
+        this.gamesplayed = gamesplayed;
+        this.wins = wins;
+        this.draws = draws;
+        this.losses = losses;
+        this.score = score;
+    }
+
     public int getUserid() {
         return userid;
     }
@@ -48,10 +59,10 @@ public class Player {
     public void setIsingame(boolean isingame) {
         this.isingame = isingame;
     }
-    public boolean isGamesplayed() {
+    public int getGamesplayed() {
         return gamesplayed;
     }
-    public void setGamesplayed(boolean gamesplayed) {
+    public void setGamesplayed(int gamesplayed) {
         this.gamesplayed = gamesplayed;
     }
     public int getWins() {
@@ -85,16 +96,22 @@ public class Player {
     }
     @Override
     public String toString() {
-        return "userid=" + userid + ", username=" + username + ", isloggedin=" + isloggedin + ", isingame="
-                + isingame + ", gamesplayed=" + gamesplayed + ", wins=" + wins + ", draws=" + draws + ", losses="
-                + losses + ", score=" + score ;
+        return "{\"userid\":" + userid + ", \"username\":\"" + username + "\", \"isloggedin\":" + isloggedin + ", \"isingame\":"
+                + isingame + ", \"gamesplayed\":" + gamesplayed + ", \"wins\":" + wins + ", \"draws\":" + draws + ", \"losses\":"
+                + losses + ", \"score\":" + score + "}";
     }
 
-    public void toPlayer(String query){
-        String[] spiltted = query.split(",");
+    public void fromJson(String json){
+        JSONObject object = new JSONObject(json);
+        userid =  object.getInt("userid");
+        username = object.getString("username");
+        isloggedin = object.getBoolean("isloggedin");
+        isingame= object.getBoolean("isingame");
+        gamesplayed= object.getInt("gamesplayed");
+        wins= object.getInt("wins");
+        draws= object.getInt("draws");
+        losses=object.getInt("losses");
+        score= object.getInt("score");
     }
-    
-
-    
     
 }
