@@ -11,6 +11,7 @@ target/
 *.iws
 *.iml
 *.ipr
+\src\main\java\module-info.java
 
 ### Eclipse ###
 .apt_generated
