@@ -35,6 +35,8 @@ public class VideoController implements Initializable {
         media = new Media(file.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         myMediaView.setMediaPlayer(mediaPlayer);
+        myMediaView.setFitHeight(500);
+        myMediaView.setFitWidth(500);
         mediaPlayer.play();
     }
     
