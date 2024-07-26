@@ -10,6 +10,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.Label?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: X808080; " xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.controller.GameController">
     <children>
         <Text fx:id="gameStatus" layoutX="337.0" layoutY="30.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #000000;" text="Tic Tac Toe" />
@@ -41,6 +42,12 @@
                 <DropShadow color="#6e6e6e" radius="30" />
             </effect>
         </Line>
+        <Label fx:id="playerXNametxt" layoutX="29.0" layoutY="264.0" prefHeight="35.0" prefWidth="136.0" style="-fx-font-size: 24; -fx-text-fill: #46A3FF;" text="Player X" />
+        <Label layoutX="29.0" layoutY="312.0" style="-fx-font-size: 18; -fx-text-fill: #46A3FF;" text="Score :" />
+        <Label fx:id="playerONametxt" layoutX="606.0" layoutY="269.0" prefHeight="35.0" prefWidth="147.0" style="-fx-font-size: 24; -fx-text-fill: #FF827E;" text="Player O" />
+        <Label layoutX="606.0" layoutY="312.0" style="-fx-font-size: 18; -fx-text-fill: #FF827E;" text="Score : " />
+        <Label fx:id="XScoreLabel" layoutX="91.0" layoutY="312.0" style="-fx-font-size: 18; -fx-text-fill: #46A3FF;" text="0" />
+        <Label fx:id="OScoreLabel" layoutX="672.0" layoutY="312.0" style="-fx-font-size: 18; -fx-text-fill: #FF827E;" text="0" />
       <Button fx:id="goBackBtn" layoutX="4.0" layoutY="4.0" mnemonicParsing="false" onAction="#handleGoBack" prefHeight="46.0" prefWidth="86.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-border-color: #000000; -fx-border-radius: 5; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 20;" text="&lt;" />
       <Button fx:id="replayBtn" layoutX="196.0" layoutY="525.0" mnemonicParsing="false" onAction="#handleReplay" prefHeight="46.0" prefWidth="408.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-border-color: #000000; -fx-border-radius: 5; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 20;" text="Play Again" visible="false">
          <graphic>

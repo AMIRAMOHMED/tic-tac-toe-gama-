@@ -32,7 +32,7 @@ public class LocalGameController {
     @FXML
     private Line winnerLine;
     @FXML
-    Button replayBtn, gotoHomeBtn;
+    Button replayBtn, goBackBtn;
 
     private boolean gameEnded;
     private PlayBoard playBoard;
@@ -149,7 +149,7 @@ public class LocalGameController {
 
     }
 
-    public void handleGotoHome(ActionEvent event) throws IOException {
+    public void handleGoBack(ActionEvent event) throws IOException {
         XScore=0;
         OScore=0;
         Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/options_page.fxml"));

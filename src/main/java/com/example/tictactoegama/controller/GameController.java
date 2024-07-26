@@ -40,6 +40,13 @@ public class GameController {
     private String currentPlayer;
     @FXML
     Button replayBtn;
+    @FXML
+    private Line winnerLine;
+    @FXML
+    Label playerXNametxt,playerONametxt , OScoreLabel , XScoreLabel;
+    static int playerScore,computerScore;
+    static String globalPlayerSymbol;
+
     private Scene originalGameScene;
     private  boolean isDraw;
     boolean isLocal;
@@ -50,8 +57,7 @@ public class GameController {
 
     private static AIMoodOption aiMoodOption;
 
-    @FXML
-    private Line winnerLine;
+
 
 
     @FXML
@@ -59,6 +65,13 @@ public class GameController {
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
+        if (globalPlayerSymbol!=null&&globalPlayerSymbol.equals("O")) {
+            OScoreLabel.setText("" + playerScore);
+            XScoreLabel.setText("" + computerScore);
+        }else{
+            OScoreLabel.setText("" + computerScore);
+            XScoreLabel.setText("" + playerScore);
+        }
         videoViewHandler = new VideoViewHandler();
 
     }
@@ -76,7 +89,19 @@ public class GameController {
     public void handleSymbolSelection(String playerSymbol, String compSymbol) {
         currentPlayer = playerSymbol;
         computerSymbol = compSymbol;
+        globalPlayerSymbol=playerSymbol;
         gameStatus.setText("Current Player: " + currentPlayer);
+        if (playerSymbol.equals("X")) {
+            playerXNametxt.setText("Player X");
+            playerONametxt.setText("Computer");
+            OScoreLabel.setText("" + computerScore);
+            XScoreLabel.setText("" + playerScore);
+        }else{
+            playerXNametxt.setText("Computer");
+            playerONametxt.setText("Player O");
+            OScoreLabel.setText("" + playerScore);
+            XScoreLabel.setText("" + computerScore);
+        }
     }
 
     @FXML
@@ -99,6 +124,8 @@ public class GameController {
     }
 
     public void handleGoBack(ActionEvent event) throws IOException {
+        computerScore=0;
+        playerScore=0;
         Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/choose_level-view.fxml"));
         Scene optionPageScene = new Scene(optionPageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -107,11 +134,24 @@ public class GameController {
     }
 
     public void handleReplay(ActionEvent event) throws IOException {
+        if(currentPlayer==globalPlayerSymbol){
+            playerScore+=1;
+        } else {
+            computerScore+=1;
+        }
+
         Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
         Scene gamePageScene = new Scene(gamePageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gamePageScene);
         window.show();
+        /*if (globalPlayerSymbol!=null&&globalPlayerSymbol.equals("O")) {
+            OScoreLabel.setText("" + playerScore);
+            XScoreLabel.setText("" + computerScore);
+        }else{
+            OScoreLabel.setText("" + computerScore);
+            XScoreLabel.setText("" + playerScore);
+        }*/
     }
 
     private void processPlayerMove(Button clickedButton, int row, int col) {
