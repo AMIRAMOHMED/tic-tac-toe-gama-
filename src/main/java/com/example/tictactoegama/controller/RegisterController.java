@@ -1,9 +1,8 @@
-/*
+package com.example.tictactoegama.controller;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package xo;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,17 +28,17 @@ import sun.security.util.Password;
  * @author Mohamed Fekry Khedr
  */
 public class RegisterController implements Initializable {
-    
+
     @FXML
     PasswordField passwordtxt;
     @FXML
     TextField emailtxt;
     @FXML
     Button loginBtn;
-    
+
     @FXML
     private void handleRegister(ActionEvent event) throws IOException {
-        
+
         /*Stage stage =new Stage();
 
         Parent root;
@@ -48,16 +47,16 @@ public class RegisterController implements Initializable {
         Scene registerScene = new Scene(root);
         stage.setScene(registerScene);
         stage.show();*/
-     
+
     }
     @FXML
     private void handleLogin(ActionEvent event) throws IOException {
-        
+
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-    
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.example.tictactoegama;
 
+import com.example.tictactoegama.Api.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -21,6 +22,8 @@ public class TicTacToeGama extends Application {
     }
 
     public static void main(String[] args) {
+        new Client();
         launch();
+
     }
 }

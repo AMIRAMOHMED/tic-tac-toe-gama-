@@ -4,6 +4,7 @@ module com.example.tictactoegama {
     requires java.desktop;
     requires javafx.media;
     requires org.json;
+    requires java.logging;
 
     opens com.example.tictactoegama to javafx.fxml;
     exports com.example.tictactoegama;
