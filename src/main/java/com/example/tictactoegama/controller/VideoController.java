@@ -8,9 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import javafx.scene.Scene;
 
 /**
  * VideoController class to manage media playback.

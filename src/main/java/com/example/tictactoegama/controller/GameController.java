@@ -1,7 +1,6 @@
 package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.interfaces.AIMoodOption;
-import com.example.tictactoegama.logic.MediumMood;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import com.example.tictactoegama.views.SymbolSelectionDialog;
@@ -15,7 +14,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;

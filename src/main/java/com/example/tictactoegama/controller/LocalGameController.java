@@ -3,7 +3,6 @@ package com.example.tictactoegama.controller;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import javafx.animation.PauseTransition;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

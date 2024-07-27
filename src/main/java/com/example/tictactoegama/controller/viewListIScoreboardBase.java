@@ -1,4 +1,4 @@
-package xo;
+package com.example.tictactoegama.controller;
 
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;

@@ -1,6 +1,5 @@
 package com.example.tictactoegama.controller;
 
-import com.example.tictactoegama.controller.LocalGameController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
