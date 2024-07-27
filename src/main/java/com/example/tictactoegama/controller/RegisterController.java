@@ -38,7 +38,7 @@ public class RegisterController {
     @FXML
     private Button loginBtn;
 
-   static  Client client;
+    static  Client client;
 
 //   static public void setClient() {
 //

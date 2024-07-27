@@ -6,7 +6,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
@@ -44,12 +43,13 @@ public class SetIPController {
       Client.init(ipAddress,5005);
       Client client = Client.getInstance();
         RegisterController.client=client;
+        LoginController.client=client;
 
 
         if (client.isConnected()) {
             statusText.setText("Connection successful!");
             statusText.setFill(javafx.scene.paint.Color.GREEN);
-            Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/Register.fxml"));
+            Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/Login.fxml"));
             Scene gamePageScene = new Scene(gamePageParent);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(gamePageScene);
