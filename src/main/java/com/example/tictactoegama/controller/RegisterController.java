@@ -80,7 +80,7 @@ public class RegisterController {
 
                 System.out.println("Request JSON: " + request.toString()); // Log the request JSON
 
-                dos.writeUTF(request.toString());
+                dos.writeUTF("{\"RequestType\":\"Register\" ,\"User\":"+ playerJson+"}");
 //                dos.flush();
 
                 System.out.println("Data sent to server successfully."); // Log success message
