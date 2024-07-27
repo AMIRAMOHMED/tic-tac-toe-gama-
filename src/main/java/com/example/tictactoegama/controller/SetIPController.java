@@ -2,10 +2,19 @@ package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.Api.Client;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+
 
 public class SetIPController {
 
@@ -18,23 +27,38 @@ public class SetIPController {
     @FXML
     private Text statusText;
 
+
     @FXML
     private void initialize() {
-        continueButton.setOnAction(event -> handleContinue());
+        continueButton.setOnAction(event -> {
+            try {
+                handleContinue(event);
+            } catch (IOException | InstantiationException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
-    private void handleContinue() {
+    private void handleContinue(javafx.event.ActionEvent event) throws IOException, InstantiationException {
         String ipAddress = ipAddressField.getText();
-        Client client = new Client(ipAddress, 5005); // Try to create a client with the provided IP address
+      Client.init(ipAddress,5005);
+      Client client = Client.getInstance();
+        RegisterController.client=client;
+
+
         if (client.isConnected()) {
             statusText.setText("Connection successful!");
             statusText.setFill(javafx.scene.paint.Color.GREEN);
-            // Proceed to the next scene or functionality
-        } else {
+            Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/Register.fxml"));
+            Scene gamePageScene = new Scene(gamePageParent);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(gamePageScene);
+            window.show();
+        } else
+        {
+
             statusText.setText("Connection failed, please try again.");
             statusText.setFill(javafx.scene.paint.Color.RED);
         }
     }
-
-
 }

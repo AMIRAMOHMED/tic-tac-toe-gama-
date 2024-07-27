@@ -1,62 +1,102 @@
-package com.example.tictactoegama.controller;/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package com.example.tictactoegama.controller;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
+import java.net.Socket;
+
+import com.example.tictactoegama.models.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
-import sun.security.util.Password;
+
+import org.json.JSONObject;
+
+import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.models.Player;
 
 /**
- *
- * @author Mohamed Fekry Khedr
+ * Controller class for handling user registration and login.
  */
-public class RegisterController implements Initializable {
+public class RegisterController {
 
     @FXML
-    PasswordField passwordtxt;
+    private PasswordField passwordtxt;
     @FXML
-    TextField emailtxt;
+    private PasswordField confirmPasswordtxt;
     @FXML
-    Button loginBtn;
+    private TextField emailtxt;
+    @FXML
+    private TextField userNametxt;
+    @FXML
+    private DatePicker birthDatetxt;
+    @FXML
+    private Button registerBtn;
+    @FXML
+    private Button loginBtn;
+
+   static  Client client;
+
+//   static public void setClient() {
+//
+//    }
+
 
     @FXML
-    private void handleRegister(ActionEvent event) throws IOException {
+    private void handleRegister(ActionEvent event) {
+        String email = emailtxt.getText();
+        String password = passwordtxt.getText();
+        String confirmPassword = confirmPasswordtxt.getText();
+        String username = userNametxt.getText();
+        int userId = 0;
+        String birthDate = birthDatetxt.getValue() != null ? birthDatetxt.getValue().toString() : "";
 
-        /*Stage stage =new Stage();
+        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || username.isEmpty() || birthDate.isEmpty()) {
+            showAlert("Error", "All fields must be filled.");
+            return;
+        }
 
-        Parent root;
+        if (!password.equals(confirmPassword)) {
+            showAlert("Error", "Passwords do not match.");
+            return;
+        }
 
-        root = FXMLLoader.load(getClass().getResource("Video.fxml"));
-        Scene registerScene = new Scene(root);
-        stage.setScene(registerScene);
-        stage.show();*/
+        User player = new User(userId, username, email, password);
+        String playerJson = player.toString(); // Convert Player object to JSON string
 
+        System.out.println("Player JSON: " + playerJson); // Log the JSON string
+
+        try {
+            if (client != null && client.isConnected()) {
+                Socket socket = client.getSocket();
+                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+
+                JSONObject request = new JSONObject();
+                request.put("RequestType", "Register");
+                request.put("User", playerJson);
+
+                System.out.println("Request JSON: " + request.toString()); // Log the request JSON
+
+                dos.writeUTF(request.toString());
+//                dos.flush();
+
+                System.out.println("Data sent to server successfully."); // Log success message
+            } else {
+                showAlert("Error", "Not connected to server.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            showAlert("Error", "Failed to communicate with server.");
+        }
     }
-    @FXML
-    private void handleLogin(ActionEvent event) throws IOException {
-
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }
-
 }

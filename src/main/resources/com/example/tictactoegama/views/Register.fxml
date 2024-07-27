@@ -7,19 +7,19 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="318.0" prefWidth="402.0" style="-fx-min-width: 800; -fx-min-height: 600; -fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xo.RegisterController">
+<AnchorPane id="AnchorPane" prefHeight="318.0" prefWidth="402.0" style="-fx-min-width: 800; -fx-min-height: 600; -fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.controller.RegisterController">
    <children>
-      <Button fx:id="loginBtn" layoutX="495.0" layoutY="380.0" mnemonicParsing="false" onAction="#handleRegister" prefHeight="38.0" prefWidth="102.0" style="-fx-background-color: #46A3FF; -fx-text-fill: #FFFFFF; -fx-background-radius: 10; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 14;" text="Register" />
-      <Label layoutX="94.0" layoutY="64.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Email" />
-      <TextField fx:id="emailtxt" layoutX="265.0" layoutY="61.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-style: solid; -fx-border-radius: 10; -fx-border-width: 2;" />
-      <Label layoutX="94.0" layoutY="208.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Password" />
-      <PasswordField fx:id="passwordtxt" layoutX="265.0" layoutY="205.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-radius: 10; -fx-border-width: 2;" />
-      <Label layoutX="615.0" layoutY="409.0" onMouseClicked="#handleLogin" style="-fx-background-color: #FFFFFF; -fx-text-fill: #46A3FF; -fx-font-size: 12; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Login" />
-      <Label layoutX="94.0" layoutY="112.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="User Name" />
-      <TextField fx:id="userNametxt" layoutX="265.0" layoutY="109.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-style: solid; -fx-border-radius: 10; -fx-border-width: 2;" />
-      <Label layoutX="94.0" layoutY="160.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Birth Date" />
-      <Label layoutX="94.0" layoutY="257.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Confirm Password" />
-      <PasswordField fx:id="passwordtxt1" layoutX="265.0" layoutY="254.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-radius: 10; -fx-border-width: 2;" />
-      <DatePicker layoutX="265.0" layoutY="156.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-background-color: #46A3FF; -fx-border-radius: 10; -fx-border-width: 2;" />
+      <Button fx:id="registerBtn" layoutX="495.0" layoutY="380.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="102.0" style="-fx-background-color: #46A3FF; -fx-text-fill: #FFFFFF; -fx-background-radius: 10; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 14;" text="Register" onAction="#handleRegister"/>
+      <Label layoutX="94.0" layoutY="64.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Email"/>
+      <TextField fx:id="emailtxt" layoutX="265.0" layoutY="61.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-style: solid; -fx-border-radius: 10; -fx-border-width: 2;"/>
+      <Label layoutX="94.0" layoutY="208.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Password"/>
+      <PasswordField fx:id="passwordtxt" layoutX="265.0" layoutY="205.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-radius: 10; -fx-border-width: 2;"/>
+      <Label layoutX="615.0" layoutY="409.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #46A3FF; -fx-font-size: 12; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Login"/>
+      <Label layoutX="94.0" layoutY="112.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="User Name"/>
+      <TextField fx:id="userNametxt" layoutX="265.0" layoutY="109.0" prefHeight="26.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-style: solid; -fx-border-radius: 10; -fx-border-width: 2;"/>
+      <Label layoutX="94.0" layoutY="160.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Birth Date"/>
+      <Label layoutX="94.0" layoutY="257.0" style="-fx-background-color: #FFFFFF; -fx-font-size: 16; -fx-font-weight: 400; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-style: normal;" text="Confirm Password"/>
+      <PasswordField fx:id="confirmPasswordtxt" layoutX="265.0" layoutY="254.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-radius: 10; -fx-border-width: 2;"/>
+      <DatePicker fx:id="birthDatetxt" layoutX="265.0" layoutY="156.0" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #46A3FF; -fx-border-radius: 10; -fx-border-width: 2;"/>
    </children>
 </AnchorPane>

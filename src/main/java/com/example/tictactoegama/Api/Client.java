@@ -7,27 +7,42 @@ public class Client {
 
     private Socket socket;
     private boolean isConnected;
+    private static Client client;
+    public  static Client getInstance() throws InstantiationException
+    {
+        if(client == null)
+        {
+            throw new InstantiationException("You have to call init function first.");
+        }
 
-    public Client(String IP, int port) {
+        return client;
+    }
+
+    public static void init(String ip, int port)
+    {
+        client = new Client(ip,port);
+    }
+    private  Client(String IP, int port) {
         try {
             socket = new Socket(IP, port);
             System.out.println("Connected to server at " + IP + " on port " + port);
             isConnected = true;
-            // Create a new thread to handle the client's requests
-            GeneralRequestHandler requestHandler = new GeneralRequestHandler(socket);
-            Thread thread = new Thread(requestHandler);
-            thread.start();
+
         } catch (IOException e) {
             e.printStackTrace();
             isConnected = false;
         }
     }
 
-    public Client(String IP) {
+    private Client(String IP) {
         this(IP, 5005);
     }
 
     public boolean isConnected() {
         return isConnected;
     }
+    public Socket getSocket() {
+        return socket;
+    }
+
 }
