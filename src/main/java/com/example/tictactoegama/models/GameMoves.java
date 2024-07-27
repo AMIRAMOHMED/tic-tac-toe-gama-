@@ -1,11 +1,15 @@
 package com.example.tictactoegama.models;
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class GameMoves {
     private String player1;
     private String player2;
     private ArrayList<Integer> moves;
     public GameMoves() {
+        moves = new ArrayList<Integer>();
     }
     public GameMoves(String player1, String player2, ArrayList<Integer> moves) {
         this.player1 = player1;
@@ -30,23 +34,22 @@ public class GameMoves {
     public void setMoves(ArrayList<Integer> moves) {
         this.moves = moves;
     }
+    
+
     @Override
     public String toString() {
-        String gamemoves = "";
-        for(int i =0;i<moves.size();i++){
-            gamemoves += ""+ moves.get(i) + ",";
-        } 
-        return "player1=" + player1 + ",player2=" + player2 + "," + gamemoves + "";
+        return "{\"player1\":\"" + player1 + "\", \"player2\":\"" + player2 + "\", \"moves\":[" + moves + "]}";
     }
-
     public void toGameMoves(String query){
-        String[] splitted = query.split(",");
-        player1 = splitted[0].substring(splitted[0].indexOf("=")+1,splitted[0].length());
-        player2 = splitted[1].substring(splitted[1].indexOf("=")+1,splitted[1].length());
-        ArrayList<Integer> amoves = new ArrayList<Integer>();
-        for(int i = 2 ; i<splitted.length;i++){
-            amoves.add(Integer.parseInt(splitted[i]));
+        JSONObject object = new JSONObject(query);
+        player1 = object.getString("player1");
+        player2 = object.getString("player2");
+        JSONArray movesarr = object.getJSONArray("moves");
+        if (movesarr != null){
+            for (int i =0 ; i<movesarr.length();i++){
+                moves.add(movesarr.optInt(i));
+            }
         }
-        moves = amoves;
+
     }
 }

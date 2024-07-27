@@ -29,9 +29,7 @@ public class PlayBoard {
         board[x][y] = symbol;
         counter++;
         int win = -1;
-        if (counter == 9) {
-            win = 0; // Draw
-        }
+
         if (counter > 4) {
             for (int i = 0; i < 3; i++) {
                 if (board[x][i] == symbol) row++;
@@ -55,6 +53,10 @@ public class PlayBoard {
             }
            
         }
+        if (win == -1 && counter == 9) {
+            win = 0; // Draw
+        }
+
         return win;
     }
 
