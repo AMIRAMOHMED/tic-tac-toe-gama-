@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="AnchorPane" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Text layoutX="153.0" layoutY="55.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Set IP Address">
+            <font>
+                <Font name="Segoe UI Bold" size="14.0" />
+            </font>
+        </Text>
+        <TextField layoutX="113.0" layoutY="86.0">
+            <font>
+                <Font name="Segoe UI" size="14.0" />
+            </font></TextField>
+        <Button layoutX="162.0" layoutY="145.0" mnemonicParsing="false" style="-fx-background-color: #46A3FF;" text="Continue" textFill="WHITE">
+            <font>
+                <Font name="Segoe UI" size="14.0" />
+            </font>
+        </Button>
+    </children>
+</AnchorPane>
