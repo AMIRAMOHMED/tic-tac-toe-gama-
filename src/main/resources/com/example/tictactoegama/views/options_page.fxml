@@ -37,15 +37,21 @@
                 </graphic>
             </Button>
 
-            <Button fx:id="playWIthFreindLocally" prefHeight="150.0" prefWidth="400.0" style="-fx-background-color: #46a3ff; -fx-background-radius: 15; -fx-background-insets: 0, 1, 2; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0.5, 0, 0); -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-border-radius: 15;">
+            <Button fx:id="playWIthFreindLocally"
+                    onAction="#handlePlayGlobal"
+                    prefHeight="150.0"
+                    prefWidth="400.0"
+                    style="-fx-background-color: #46a3ff; -fx-background-radius: 15; -fx-background-insets: 0, 1, 2; -fx-text-fill: white; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.75), 10, 0.5, 0, 0); -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10 20; -fx-border-radius: 15;">
                 <graphic>
                     <VBox alignment="CENTER">
                         <ImageView fitHeight="100.0" fitWidth="100.0" preserveRatio="true" smooth="false">
                             <image>
-                                <Image url="@../images/global_icon.png" />
+                                <Image url="@../images/global_icon.png"/>
                             </image>
                         </ImageView>
-                        <Text style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;">Play with Friend (Online)</Text>
+                        <Text style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;">Play with Friend
+                            (Online)
+                        </Text>
                     </VBox>
                 </graphic>
             </Button>

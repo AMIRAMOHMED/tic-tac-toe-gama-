@@ -41,14 +41,14 @@ public class LoginController implements Initializable {
     @FXML
     private void handleRegister(ActionEvent event) throws IOException {
 
-        /*Stage stage =new Stage();
+        Stage stage =new Stage();
 
         Parent root;
 
         root = FXMLLoader.load(getClass().getResource("Video.fxml"));
         Scene registerScene = new Scene(root);
         stage.setScene(registerScene);
-        stage.show();*/
+        stage.show();
 
     }
     @FXML
