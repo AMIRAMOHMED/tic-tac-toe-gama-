@@ -72,7 +72,6 @@ public class LoginController {
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
                 DataInputStream inp = new DataInputStream(socket.getInputStream());
 
-
                 // Create a JSON object for the login request
                 JSONObject request = new JSONObject();
                 request.put("RequestType", "Login");
@@ -81,9 +80,24 @@ public class LoginController {
                 System.out.println("Request JSON: " + request.toString()); // Log the request JSON
 
                 dos.writeUTF(request.toString()); // Send the JSON request to the server
-                System.out.println("Data sent to server successfully."); // Log success message
+                System.out.println("Data sent to server successfully.");// Log success message
+
+                dos.writeUTF("{\"RequestType\":\"Register\" ,\"User\":"+ playerJson+"}");
                 String resulr=inp.readUTF();
                 System.out.println(resulr);
+                if (resulr.equals("Success")) {
+                    Stage stage = new Stage();
+                    Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/choose_level-view.fxml"));
+                    Scene registerScene = new Scene(root);
+                    stage.setScene(registerScene);
+                    stage.show();
+
+                } else if (resulr.equals("Invalid username or password")) {
+                    showAlert("Error", "Invalid username or password");
+
+                }else {
+                    showAlert("Error","Failed to update login status");
+                }
             } else {
                 showAlert("Error", "Not connected to server.");
             }

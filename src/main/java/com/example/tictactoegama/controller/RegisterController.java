@@ -86,7 +86,8 @@ public class RegisterController {
                 String resulr=inp.readUTF();
                 System.out.println(resulr); // Log the request JSON
 
-//                dos.flush();
+
+//
 
                 System.out.println("Data sent to server successfully."); // Log success message
             } else {
