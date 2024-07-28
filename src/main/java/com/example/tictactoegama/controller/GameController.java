@@ -66,6 +66,7 @@ public class GameController {
 
     @FXML
     public void initialize() {
+        aiMoodOption = new OnlineGamePlay();
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
