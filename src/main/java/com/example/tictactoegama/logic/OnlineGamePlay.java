@@ -22,8 +22,10 @@ public class OnlineGamePlay implements AIMoodOption {
             }
             return board.play(i, opponentSymbol);
         } catch (IOException e) {
+            System.out.println("error 3");
             return 0;
         } catch (InstantiationException e) {
+            System.out.println("error 4");
             return 0;
         }
     }

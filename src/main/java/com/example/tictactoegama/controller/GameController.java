@@ -170,18 +170,19 @@ public class GameController {
         if (flag== 0) {
             endGame("draw");
         }
-        if (aiMoodOption == new OnlineGamePlay()){
             try {
                 Client client = Client.getInstance();
                 DataOutputStream output = new DataOutputStream(client.getSocket().getOutputStream());
                 output.writeInt(row+col);
             } catch (InstantiationException e) {
+                System.out.println("error");
                 throw new RuntimeException(e);
             } catch (IOException e) {
+                System.out.println("error2");
                 throw new RuntimeException(e);
             }
 
-        }
+
     }
 
     private void processComputerMove() {
