@@ -1,6 +1,8 @@
 package com.example.tictactoegama.Api;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Client {
@@ -8,6 +10,9 @@ public class Client {
     private Socket socket;
     private boolean isConnected;
     private static Client client;
+    private PrintWriter sender;
+    private BufferedReader reader;
+
     public  static Client getInstance() throws InstantiationException
     {
         if(client == null)

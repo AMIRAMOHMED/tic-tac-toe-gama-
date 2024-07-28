@@ -4,9 +4,7 @@ package com.example.tictactoegama.controller;/*
  * and open the template in the editor.
  */
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 
@@ -69,25 +67,16 @@ public class LoginController {
         try {
             if (client != null && client.isConnected()) {
                 Socket socket = client.getSocket();
-                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                DataInputStream inp = new DataInputStream(socket.getInputStream());
-
-                // Create a JSON object for the login request
-                JSONObject request = new JSONObject();
-                request.put("RequestType", "Login");
-                request.put("User", playerJson);
-
-                System.out.println("Request JSON: " + request.toString()); // Log the request JSON
-
-                dos.writeUTF(request.toString()); // Send the JSON request to the server
-                System.out.println("Data sent to server successfully.");// Log success message
-
-                dos.writeUTF("{\"RequestType\":\"Register\" ,\"User\":"+ playerJson+"}");
-                String resulr=inp.readUTF();
-                System.out.println(resulr);
+                PrintWriter dos = new PrintWriter(socket.getOutputStream());
+                dos.println("{\"RequestType\":\"Login\", \"User\":"+ playerJson+"}");
+                dos.flush();
+                BufferedReader inp = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                String resulr=inp.readLine();
+                inp.close();
+                dos.close();
                 if (resulr.equals("Success")) {
                     Stage stage = new Stage();
-                    Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/choose_level-view.fxml"));
+                    Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
                     Scene registerScene = new Scene(root);
                     stage.setScene(registerScene);
                     stage.show();
