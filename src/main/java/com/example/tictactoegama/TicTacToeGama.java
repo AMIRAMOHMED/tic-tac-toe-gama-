@@ -22,7 +22,7 @@ public class TicTacToeGama extends Application {
     }
 
     public static void main(String[] args) {
-        Client.init("10.10.13.101",5005);
+        Client.init("192.168.1.3",5005);
         launch();
 
     }
