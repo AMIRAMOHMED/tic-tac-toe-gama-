@@ -4,6 +4,7 @@ package com.example.tictactoegama.controller;/*
  * and open the template in the editor.
  */
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -69,6 +70,8 @@ public class LoginController {
             if (client != null && client.isConnected()) {
                 Socket socket = client.getSocket();
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                DataInputStream inp = new DataInputStream(socket.getInputStream());
+
 
                 // Create a JSON object for the login request
                 JSONObject request = new JSONObject();
@@ -79,6 +82,8 @@ public class LoginController {
 
                 dos.writeUTF(request.toString()); // Send the JSON request to the server
                 System.out.println("Data sent to server successfully."); // Log success message
+                String resulr=inp.readUTF();
+                System.out.println(resulr);
             } else {
                 showAlert("Error", "Not connected to server.");
             }
