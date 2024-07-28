@@ -60,6 +60,7 @@ public class GameController {
     private VideoViewHandler videoViewHandler;
     private static AIMoodOption aiMoodOption;
     private Client client;
+    DataOutputStream output;
 
 
 
@@ -68,7 +69,11 @@ public class GameController {
     public void initialize() {
         try {
             client = Client.getInstance();
+            output = new DataOutputStream(client.getSocket().getOutputStream());
+            output.writeUTF("Im good");
         } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         aiMoodOption = new OnlineGamePlay();
@@ -123,7 +128,12 @@ public class GameController {
             int row = GridPane.getRowIndex(clickedButton);
             int col = GridPane.getColumnIndex(clickedButton);
 
-            processPlayerMove(clickedButton, row, col);
+            try {
+                processPlayerMove(clickedButton, row, col);
+            } catch (IOException e) {
+                System.out.println("wtf");
+                throw new RuntimeException(e);
+            }
 
             if (!gameEnded) {
                 PauseTransition pause = new PauseTransition(Duration.seconds(0.1));
@@ -164,29 +174,19 @@ public class GameController {
         }*/
     }
 
-    private void processPlayerMove(Button clickedButton, int row, int col) {
+    private void processPlayerMove(Button clickedButton, int row, int col) throws IOException {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
         int flag = playBoard.play(row,col,currentPlayer.charAt(0));
-
+            System.out.println("Sending");
+            output.writeUTF(""+row*3+col);
+            System.out.println("Sending");
         if (flag== 1) {
             endGame(currentPlayer);
         }
         if (flag== 0) {
             endGame("draw");
         }
-            try {
-                System.out.println("Sending");
-                DataOutputStream output = Client.getOutput();
-                System.out.println("Sending");
-                output.writeUTF("1");
-                System.out.println("Sending");
-            } catch (IOException e) {
-                System.out.println("error2");
-                throw new RuntimeException(e);
-            }
-
-
     }
 
     private void processComputerMove() {

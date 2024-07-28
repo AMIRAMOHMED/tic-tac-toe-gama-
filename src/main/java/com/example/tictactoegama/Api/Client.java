@@ -12,6 +12,19 @@ public class Client {
     private static Client client;
     private static DataInputStream input;
     private static DataOutputStream output;
+    private  Client(String IP, int port) {
+        try {
+            socket = new Socket(IP, port);
+            System.out.println("Connected to server at " + IP + " on port " + port);
+            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream((socket.getOutputStream()));
+            isConnected = true;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            isConnected = false;
+        }
+    }
     public  static Client getInstance() throws InstantiationException
     {
         if(client == null)
@@ -26,19 +39,7 @@ public class Client {
     {
         client = new Client(ip,port);
     }
-    private  Client(String IP, int port) {
-        try {
-            socket = new Socket(IP, port);
-            System.out.println("Connected to server at " + IP + " on port " + port);
-            input = new DataInputStream(socket.getInputStream());
-            output = new DataOutputStream((socket.getOutputStream()));
-            isConnected = true;
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            isConnected = false;
-        }
-    }
     private Client(String IP) {
         this(IP, 5005);
     }
