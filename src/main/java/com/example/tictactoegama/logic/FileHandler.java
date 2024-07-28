@@ -1,14 +1,10 @@
 package com.example.tictactoegama.logic;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 public class FileHandler {
     File tempFile;
-    FileInputStream input;
-    FileOutputStream output;
-    FileHandler(){
+    public FileHandler(){
         File theDir = new File(System.getProperty("java.io.tmpdir")+"\\tictactoe");
         if (!theDir.exists()){
             theDir.mkdirs();
@@ -16,12 +12,22 @@ public class FileHandler {
         tempFile = new File(theDir.getAbsolutePath()+"\\gamehistory.txt");
     }
     public String readFile() throws IOException{
-        input = new FileInputStream(tempFile);
-        String history = input.readAllBytes().toString();
+        FileReader file = new FileReader(tempFile);
+        BufferedReader input = new BufferedReader(file);
+        String history="";
+        String newhistory;
+        while ((newhistory = input.readLine()) !=null){
+            newhistory += "\n"+ newhistory;
+        }
+        System.out.println(newhistory);
+        input.close();
         return history;
     }
     public void writeFile(String query) throws IOException{
-        output = new FileOutputStream(tempFile);
-        output.write(query.getBytes());
+        FileWriter file = new FileWriter(tempFile,true);
+        BufferedWriter output = new BufferedWriter(file);
+        output.write(query+"\n");
+        output.close();
+
     }
 }

@@ -38,7 +38,7 @@ public class GameMoves {
 
     @Override
     public String toString() {
-        return "{\"player1\":\"" + player1 + "\", \"player2\":\"" + player2 + "\", \"moves\":[" + moves + "]}";
+        return "{\"player1\":\"" + player1 + "\", \"player2\":\"" + player2 + "\", \"moves\":" + moves + "}";
     }
     public void toGameMoves(String query){
         JSONObject object = new JSONObject(query);

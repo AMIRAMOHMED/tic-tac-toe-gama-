@@ -19,7 +19,6 @@ public class TicTacToeGama extends Application {
             false
         );
     }
-
     public static void main(String[] args) {
         launch();
     }

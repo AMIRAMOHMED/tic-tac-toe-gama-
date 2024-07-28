@@ -1,6 +1,7 @@
 package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.interfaces.AIMoodOption;
+import com.example.tictactoegama.models.GameMoves;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import com.example.tictactoegama.views.SymbolSelectionDialog;
@@ -15,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
@@ -22,7 +24,7 @@ import javafx.scene.Node;
 import javafx.scene.shape.Line;
 
 import java.io.IOException;
-
+import java.util.ArrayList;
 
 
 public class GameController {
@@ -52,14 +54,18 @@ public class GameController {
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
-
+    private GameMoves gameMoves;
     private static AIMoodOption aiMoodOption;
-
+    ArrayList<Integer> moves;
 
 
 
     @FXML
     public void initialize() {
+        gameMoves = new GameMoves();
+        gameMoves.setPlayer1("You");
+        gameMoves.setPlayer2("Ai");
+        moves = new ArrayList<Integer>();
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
@@ -71,7 +77,6 @@ public class GameController {
             XScoreLabel.setText("" + playerScore);
         }
         videoViewHandler = new VideoViewHandler();
-
     }
 
     public void setAiMoodOption(AIMoodOption aiMoodOption) {
@@ -156,7 +161,7 @@ public class GameController {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
         int flag = playBoard.play(row,col,currentPlayer.charAt(0));
-
+        moves.add((row*3+col));
         if (flag== 1) {
             endGame(currentPlayer);
         }
@@ -164,9 +169,8 @@ public class GameController {
             endGame("draw");
         }
     }
-
     private void processComputerMove() {
-        int flag = aiMoodOption.makeMove(playBoard,computerSymbol.charAt(0));
+        int flag = aiMoodOption.makeMove(playBoard,computerSymbol.charAt(0),moves);
         if (flag==1) {
             endGame(computerSymbol);
         }
@@ -175,8 +179,6 @@ public class GameController {
         }
         updateBoardUI();
     }
-
-
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
             button.setStyle(
@@ -228,7 +230,12 @@ String videoPath ="";
             return;
         }
 
-
+        Stage stage2 = new Stage();
+        gameMoves.setMoves(moves);
+        Scene scene = new Scene(new savehistoryrequestBase(stage2,gameMoves));
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.setScene(scene);
+        stage2.show();
         disableButtons();
         gameEnded = true;
         drawWinnerLine(playBoard.getWinningTiles());

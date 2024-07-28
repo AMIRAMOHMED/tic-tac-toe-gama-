@@ -5,8 +5,11 @@
  */
 package com.example.tictactoegama.logic;
 
+import com.example.tictactoegama.controller.GameController;
 import com.example.tictactoegama.interfaces.AIMoodOption;
 import com.example.tictactoegama.models.PlayBoard;
+
+import java.util.ArrayList;
 
 /**
  *
@@ -15,7 +18,7 @@ import com.example.tictactoegama.models.PlayBoard;
 public class AIEasyMode implements AIMoodOption {
      char playerSymbol, computerSymbol;
     @Override
-    public int makeMove(PlayBoard board, char computerSymbol) {
+    public int makeMove(PlayBoard board, char computerSymbol , ArrayList moves) {
         this.computerSymbol = computerSymbol;
         if (computerSymbol == 'O') {
             playerSymbol = 'X';
@@ -23,6 +26,7 @@ public class AIEasyMode implements AIMoodOption {
             playerSymbol = 'O';
         }
         int[] move = findWorstMove(board.getBoard());
+        moves.add(move[0]*3+move[1]);
         return board.play(move[0], move[1], computerSymbol);
     }
 
