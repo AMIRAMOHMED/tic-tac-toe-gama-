@@ -1,5 +1,6 @@
 package com.example.tictactoegama.controller;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -73,6 +74,7 @@ public class RegisterController {
             if (client != null && client.isConnected()) {
                 Socket socket = client.getSocket();
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                DataInputStream inp = new DataInputStream(socket.getInputStream());
 
                 JSONObject request = new JSONObject();
                 request.put("RequestType", "Register");
@@ -81,6 +83,9 @@ public class RegisterController {
                 System.out.println("Request JSON: " + request.toString()); // Log the request JSON
 
                 dos.writeUTF("{\"RequestType\":\"Register\" ,\"User\":"+ playerJson+"}");
+                String resulr=inp.readUTF();
+                System.out.println(resulr); // Log the request JSON
+
 //                dos.flush();
 
                 System.out.println("Data sent to server successfully."); // Log success message
