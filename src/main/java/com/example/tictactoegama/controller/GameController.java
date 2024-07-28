@@ -1,7 +1,9 @@
 package com.example.tictactoegama.controller;
 
+import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.interfaces.AIMoodOption;
 import com.example.tictactoegama.logic.MediumMood;
+import com.example.tictactoegama.logic.OnlineGamePlay;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import com.example.tictactoegama.views.SymbolSelectionDialog;
@@ -23,6 +25,8 @@ import javafx.animation.PauseTransition;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 
@@ -77,7 +81,7 @@ public class GameController {
     }
 
     public void setAiMoodOption(AIMoodOption aiMoodOption) {
-        this.aiMoodOption = aiMoodOption;
+        this.aiMoodOption = new OnlineGamePlay();
     }
 
 
@@ -165,6 +169,18 @@ public class GameController {
         if (flag== 0) {
             endGame("draw");
         }
+        if (aiMoodOption == new OnlineGamePlay()){
+            try {
+                Client client = Client.getInstance();
+                DataOutputStream output = new DataOutputStream(client.getSocket().getOutputStream());
+                output.writeInt(row+col);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
     }
 
     private void processComputerMove() {
@@ -174,6 +190,8 @@ public class GameController {
         }
         else if (flag==0){
             endGame("draw");
+        } else if (flag == 10) {
+            endGame(currentPlayer);
         }
         updateBoardUI();
     }

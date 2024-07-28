@@ -47,8 +47,6 @@ public class Scoreboard implements Initializable {
                     nameList.getItems().add(new xo.viewListIScoreboardBase(i+". "+ item.getString("username"), item.getInt("score")));
                 }
             }
-
-
         } catch (InstantiationException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

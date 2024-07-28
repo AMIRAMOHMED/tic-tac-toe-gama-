@@ -60,6 +60,47 @@ public class PlayBoard {
         return win;
     }
 
+    public  int play(int i,char symbol){
+        int x=0,y=0;
+        for(int j =0 ; j<i;j++){
+            if(i==3) x++;
+            y=i%3;
+        }
+        int col = 0, row = 0, diag = 0, rdiag = 0;
+        board[x][y] = symbol;
+        counter++;
+        int win = -1;
+
+        if (counter > 4) {
+            for (int j = 0; j < 3; j++) {
+                if (board[x][j] == symbol) row++;
+                if (board[j][y] == symbol) col++;
+                if (board[j][j] == symbol) diag++;
+                if (board[j][2 - j] == symbol) rdiag++;
+
+            }
+            if (row == 3) {
+                win = 1; // Win by row
+                for (int j = 0; j < 3; j++) winningTiles[j] = new int[]{x, j};
+            } else if (col == 3) {
+                win = 1; // Win by column
+                for (int j = 0; j < 3; j++) winningTiles[j] = new int[]{j, y};
+            } else if (diag == 3) {
+                win = 1; // Win by main diagonal
+                for (int j = 0; j < 3; j++) winningTiles[j] = new int[]{j, j};
+            } else if (rdiag == 3) {
+                win = 1; // Win by reverse diagonal
+                for (int j = 0; j < 3; j++) winningTiles[j] = new int[]{j, 2 - j};
+            }
+
+        }
+        if (win == -1 && counter == 9) {
+            win = 0; // Draw
+        }
+
+        return win;
+    }
+
     public int[][] getWinningTiles() {
         return winningTiles;
     }

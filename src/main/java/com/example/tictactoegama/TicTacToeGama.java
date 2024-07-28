@@ -11,7 +11,7 @@ import java.io.IOException;
 public class TicTacToeGama extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeGama.class.getResource("/com/example/tictactoegama/views/hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeGama.class.getResource("/com/example/tictactoegama/views/gama-page.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         stage.setTitle("Tic Tac Toe");
         stage.setScene(scene);
@@ -22,7 +22,7 @@ public class TicTacToeGama extends Application {
     }
 
     public static void main(String[] args) {
-
+        Client.init("10.10.13.101",5005);
         launch();
 
     }
