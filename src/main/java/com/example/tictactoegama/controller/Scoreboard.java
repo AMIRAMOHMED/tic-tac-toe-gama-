@@ -26,7 +26,7 @@ import org.json.JSONObject;
 public class Scoreboard implements Initializable {
     
     @FXML
-    ListView<xo.viewListIScoreboardBase> nameList;
+    ListView<viewListIScoreboardBase> nameList;
 
     Client client;
     DataInputStream input;
@@ -44,7 +44,7 @@ public class Scoreboard implements Initializable {
             if (!objarr.isEmpty()){
                 for (int i = 0 ; i< objarr.length();i++){
                     JSONObject item = objarr.getJSONObject(i);
-                    nameList.getItems().add(new xo.viewListIScoreboardBase(i+". "+ item.getString("username"), item.getInt("score")));
+                    nameList.getItems().add(new viewListIScoreboardBase(i+". "+ item.getString("username"), item.getInt("score")));
                 }
             }
         } catch (InstantiationException e) {

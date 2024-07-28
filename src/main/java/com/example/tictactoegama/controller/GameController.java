@@ -58,14 +58,19 @@ public class GameController {
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
-
     private static AIMoodOption aiMoodOption;
+    private Client client;
 
 
 
 
     @FXML
     public void initialize() {
+        try {
+            client = Client.getInstance();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        }
         aiMoodOption = new OnlineGamePlay();
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
@@ -82,7 +87,7 @@ public class GameController {
     }
 
     public void setAiMoodOption(AIMoodOption aiMoodOption) {
-        this.aiMoodOption = new OnlineGamePlay();
+        this.aiMoodOption = aiMoodOption;
     }
 
 
@@ -171,12 +176,11 @@ public class GameController {
             endGame("draw");
         }
             try {
-                Client client = Client.getInstance();
-                DataOutputStream output = new DataOutputStream(client.getSocket().getOutputStream());
-                output.writeInt(row+col);
-            } catch (InstantiationException e) {
-                System.out.println("error");
-                throw new RuntimeException(e);
+                System.out.println("Sending");
+                DataOutputStream output = Client.getOutput();
+                System.out.println("Sending");
+                output.writeUTF("1");
+                System.out.println("Sending");
             } catch (IOException e) {
                 System.out.println("error2");
                 throw new RuntimeException(e);
