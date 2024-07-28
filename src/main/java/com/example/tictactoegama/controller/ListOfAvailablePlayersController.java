@@ -26,6 +26,8 @@ import javafx.scene.text.Text;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+
+
 /**
  * FXML Controller class
  *
@@ -67,6 +69,19 @@ public class ListOfAvailablePlayersController implements Initializable {
                     JSONObject item = objarr.getJSONObject(i);
                     onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), false));
                 }
+                Thread thread = new Thread() {
+                    @Override
+                    public void run() {
+                        while(client.isConnected()){
+                            try {
+                                DataInputStream dis = new DataInputStream(client.getSocket().getInputStream());
+                                //String req= dis.readLine();
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                    }
+                };
             }
 
 

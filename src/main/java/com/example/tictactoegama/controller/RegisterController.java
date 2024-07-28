@@ -7,12 +7,17 @@ import java.net.Socket;
 import com.example.tictactoegama.models.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import com.example.tictactoegama.Api.Client;
@@ -40,10 +45,15 @@ public class RegisterController {
 
     static  Client client;
 
-//   static public void setClient() {
-//
-//    }
 
+    @FXML
+    private void handleLogin(ActionEvent event) throws IOException {
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/Login.fxml"));
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
+    }
 
     @FXML
     private void handleRegister(ActionEvent event) {
@@ -52,9 +62,9 @@ public class RegisterController {
         String confirmPassword = confirmPasswordtxt.getText();
         String username = userNametxt.getText();
         int userId = 0;
-        String birthDate = birthDatetxt.getValue() != null ? birthDatetxt.getValue().toString() : "";
 
-        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || username.isEmpty() || birthDate.isEmpty()) {
+
+        if (email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || username.isEmpty() ) {
             showAlert("Error", "All fields must be filled.");
             return;
         }

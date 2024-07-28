@@ -4,6 +4,7 @@ package com.example.tictactoegama.controller;/*
  * and open the template in the editor.
  */
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -16,6 +17,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -42,12 +44,12 @@ public class LoginController {
 
     @FXML
     private void handleRegister(ActionEvent event) throws IOException {
-        // Handles register button click, opens the register screen
-        Stage stage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/Register.fxml"));
-        Scene registerScene = new Scene(root);
-        stage.setScene(registerScene);
-        stage.show();
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/Register.fxml"));
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
+
     }
 
     @FXML
@@ -69,7 +71,7 @@ public class LoginController {
             if (client != null && client.isConnected()) {
                 Socket socket = client.getSocket();
                 DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-
+                DataInputStream dis = new DataInputStream(socket.getInputStream());
                 // Create a JSON object for the login request
                 JSONObject request = new JSONObject();
                 request.put("RequestType", "Login");
@@ -79,6 +81,16 @@ public class LoginController {
 
                 dos.writeUTF(request.toString()); // Send the JSON request to the server
                 System.out.println("Data sent to server successfully."); // Log success message
+                String response = dis.readLine();
+                if(response=="1"){
+                    Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
+                    Scene gamePageScene = new Scene(gamePageParent);
+                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    window.setScene(gamePageScene);
+                    window.show();
+                }else{
+                    //todo msges for not authorized
+                }
             } else {
                 showAlert("Error", "Not connected to server.");
             }
