@@ -54,7 +54,6 @@ public class LoginController {
 
     @FXML
     private void handleLogin(ActionEvent event) throws IOException {
-        // Handles login button click, validates input and communicates with the server
         String password = passwordtxt.getText();
         String username = userNametxt.getText();
         if (username.isEmpty() || password.isEmpty()) {
@@ -67,38 +66,34 @@ public class LoginController {
 
         System.out.println("Player JSON: " + playerJson); // Log the JSON string
 
-        try {
-            if (client != null && client.isConnected()) {
-                Socket socket = client.getSocket();
-                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                DataInputStream dis = new DataInputStream(socket.getInputStream());
-                // Create a JSON object for the login request
-                JSONObject request = new JSONObject();
-                request.put("RequestType", "Login");
-                request.put("User", playerJson);
+        if (client != null && client.isConnected()) {
+            Socket socket = client.getSocket();
+            try (DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+                 DataInputStream dis = new DataInputStream(socket.getInputStream())) {
 
-                System.out.println("Request JSON: " + request.toString()); // Log the request JSON
-
-                dos.writeUTF(request.toString()); // Send the JSON request to the server
+                dos.writeUTF("{\"RequestType\":\"Login\", \"User\":" + playerJson + "}");
                 System.out.println("Data sent to server successfully."); // Log success message
-                String response = dis.readLine();
-                if(response=="1"){
+
+                String response = dis.readUTF(); // Use readUTF instead of readLine
+                System.out.println(response);
+                if ("1".equals(response)) {
                     Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
                     Scene gamePageScene = new Scene(gamePageParent);
                     Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     window.setScene(gamePageScene);
                     window.show();
-                }else{
-                    //todo msges for not authorized
+                } else {
+                    showAlert("Error", "Login failed. Please check your credentials.");
                 }
-            } else {
-                showAlert("Error", "Not connected to server.");
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Error", "Failed to communicate with server.");
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to communicate with server.");
+        } else {
+            showAlert("Error", "Not connected to server.");
         }
     }
+
 
     private void showAlert(String title, String message) {
         // Shows an alert with the provided title and message
