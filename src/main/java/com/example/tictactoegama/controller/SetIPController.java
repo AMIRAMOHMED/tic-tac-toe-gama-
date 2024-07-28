@@ -44,6 +44,7 @@ public class SetIPController {
       Client client = Client.getInstance();
         RegisterController.client=client;
         LoginController.client=client;
+        ListOfAvailablePlayersController.client=client;
 
 
         if (client.isConnected()) {

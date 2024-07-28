@@ -1,27 +1,28 @@
 package com.example.tictactoegama.controller;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class OnlinePlayerListItem extends AnchorPane{
+public class OnlinePlayerListItem extends AnchorPane {
 
-    protected final Text text;
-    protected final SVGPath sVGPath;
-    protected final Text text0;
-    protected final Button button;
+    protected final Text playerNameText;
+    protected final SVGPath statusIcon;
+    protected final Text statusText;
+    protected final Button inviteButton;
+    private final int playerId;
 
-    public OnlinePlayerListItem(String playerName, boolean status){
-
-        text = new Text();
-        sVGPath = new SVGPath();
-        text0 = new Text();
-        button = new Button();
+    public OnlinePlayerListItem(String playerName,int id, boolean status) {
+        this.playerId = id;
+        playerNameText = new Text();
+        statusIcon = new SVGPath();
+        statusText = new Text();
+        inviteButton = new Button();
 
         setMaxHeight(USE_PREF_SIZE);
         setMaxWidth(USE_PREF_SIZE);
@@ -30,37 +31,37 @@ public class OnlinePlayerListItem extends AnchorPane{
         setPrefHeight(50.0);
         setPrefWidth(700.0);
 
-        text.setLayoutX(14.0);
-        text.setLayoutY(20.0);
-        text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text.setStrokeWidth(0.0);
-        text.setText(playerName);
-        text.setFont(new Font("Segoe UI", 16.0));
+        playerNameText.setLayoutX(14.0);
+        playerNameText.setLayoutY(20.0);
+        playerNameText.setStrokeType(StrokeType.OUTSIDE);
+        playerNameText.setStrokeWidth(0.0);
+        playerNameText.setText(playerName);
+        playerNameText.setFont(new Font("Segoe UI", 16.0));
 
-        sVGPath.setContent("M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z");
-        sVGPath.setFill(javafx.scene.paint.Color.valueOf("#00c096"));
-        sVGPath.setLayoutX(6.0);
-        sVGPath.setLayoutY(25.0);
+        statusIcon.setContent("M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z");
+        statusIcon.setFill(status ? Color.valueOf("#ff0000"): Color.valueOf("#00c096"));
+        statusIcon.setLayoutX(6.0);
+        statusIcon.setLayoutY(25.0);
 
-        text0.setLayoutX(24.0);
-        text0.setLayoutY(40.0);
-        text0.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
-        text0.setStrokeWidth(0.0);
-        text0.setText("Online");
+        statusText.setLayoutX(24.0);
+        statusText.setLayoutY(40.0);
+        statusText.setStrokeType(StrokeType.OUTSIDE);
+        statusText.setStrokeWidth(0.0);
+        statusText.setText(status ? "ingame" : "online");
 
-        button.setLayoutX(570.0);
-        button.setLayoutY(13.0);
-        button.setMnemonicParsing(false);
-        button.setPrefHeight(25.0);
-        button.setPrefWidth(102.0);
-        button.setStyle("-fx-border-color: #000000;");
-        button.setBackground(Background.EMPTY);
-        button.setText("invite");
+        inviteButton.setLayoutX(570.0);
+        inviteButton.setLayoutY(13.0);
+        inviteButton.setMnemonicParsing(false);
+        inviteButton.setPrefHeight(25.0);
+        inviteButton.setPrefWidth(102.0);
+        inviteButton.setStyle("-fx-border-color: #000000;");
+        inviteButton.setBackground(Background.EMPTY);
+        inviteButton.setText("Invite");
 
-        getChildren().add(text);
-        getChildren().add(sVGPath);
-        getChildren().add(text0);
-        getChildren().add(button);
+        getChildren().addAll(playerNameText, statusIcon, statusText, inviteButton);
 
+        inviteButton.setOnAction(event -> {
+            ListOfAvailablePlayersController.requestGame(playerId);
+        });
     }
 }
