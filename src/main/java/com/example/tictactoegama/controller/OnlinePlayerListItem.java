@@ -79,7 +79,10 @@ public class OnlinePlayerListItem extends AnchorPane{
                         try {
                             ClientHandler.send( "{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+userid+"}");
                             String msg;
+
                             while ((msg = RequestHandler.getResponse()) != null) {
+                                System.out.println(msg);
+                                Thread.sleep(3000);
                                 JSONObject object = new JSONObject(msg);
                                 boolean accepted = object.getBoolean("accepted");
                                 if (accepted) {
@@ -99,6 +102,8 @@ public class OnlinePlayerListItem extends AnchorPane{
                                 }
                             }
                         } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                     }
