@@ -72,17 +72,19 @@ public class LoginController {
                 dos.println("{\"RequestType\":\"Login\", \"User\":"+ playerJson+"}");
                 dos.flush();
                 BufferedReader inp = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                String resulr=inp.readLine();
+                JSONObject resulr= new JSONObject(inp.readLine());
                 inp.close();
                 dos.close();
-                if (resulr.equals("Success")) {
+                int id =resulr.getInt("userid");
+                if (id>0) {
+                    Client.userid = id;
                     Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
                     Scene registerScene = new Scene(root);
                     stage.setScene(registerScene);
                     stage.show();
 
-                } else if (resulr.equals("Invalid username or password")) {
+                } else if (resulr.getString("invalid").equals("Invalid username or password")) {
                     showAlert("Error", "Invalid username or password");
 
                 }else {

@@ -1,6 +1,7 @@
 package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.logic.OnlineGamePlay;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -13,12 +14,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 
 public class OnlinePlayerListItem extends AnchorPane{
 
@@ -77,25 +76,27 @@ public class OnlinePlayerListItem extends AnchorPane{
                     public void run() {
                         try {
                             PrintWriter output = new PrintWriter(client.getSocket().getOutputStream(),true);
-                            output.println("{\"RequestType\":\"RequestGame\",\"userid\":"+userid+"}");
+                            output.println("{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+userid+"}");
                             BufferedReader reader = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
-                            JSONObject object = new JSONObject(reader.readLine());
-                            boolean accepted = object.getBoolean("accepted");
-                            if(accepted) {
-                                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
-                                Parent gamePageParent = loader.load();
+                            String msg;
+                            while ((msg = reader.readLine()) != null) {
+                                JSONObject object = new JSONObject(reader.readLine());
+                                boolean accepted = object.getBoolean("accepted");
+                                if (accepted) {
+                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
+                                    Parent gamePageParent = loader.load();
 
-                                GameController gameController = loader.getController();
-                                gameController.setAiMoodOption();
+                                    GameController gameController = loader.getController();
+                                    gameController.setAiMoodOption(new OnlineGamePlay());
 
-                                Scene gamePageScene = new Scene(gamePageParent);
-                                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                                window.setScene(gamePageScene);
-                                window.show();
-                            }
-                            else {
-                                inviteButton.setText("Denied");
-                                inviteButton.setStyle("-fx-background-color: #FF827E");
+                                    Scene gamePageScene = new Scene(gamePageParent);
+                                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                                    window.setScene(gamePageScene);
+                                    window.show();
+                                } else {
+                                    inviteButton.setText("Denied");
+                                    inviteButton.setStyle("-fx-background-color: #FF827E");
+                                }
                             }
                         } catch (IOException e) {
                             throw new RuntimeException(e);

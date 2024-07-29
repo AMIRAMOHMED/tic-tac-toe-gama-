@@ -47,19 +47,20 @@ public class ListOfAvailablePlayersController implements Initializable {
     SVGPath status;
     Button invite;
     ArrayList<OnlinePlayerListItem> items;
-    static Client client;
+    Client client;
+    BufferedReader inp;
+    PrintWriter dos;
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         items = new ArrayList<OnlinePlayerListItem>();
         try {
-            Socket socket = client.getSocket();
-            PrintWriter dos = new PrintWriter(socket.getOutputStream());
+            client = Client.getInstance();
+            inp = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
+            dos = new PrintWriter(client.getSocket().getOutputStream(),true);
             dos.println("{\"RequestType\":\"PlayerList\"}");
             dos.flush();
-            BufferedReader inp = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             JSONObject object = new JSONObject(inp.readLine());
-            inp.close();
-            dos.close();
             JSONArray objarr = object.getJSONArray("PlayList");
             if (!objarr.isEmpty()){
                 noplayers.setOpacity(0);
@@ -70,6 +71,31 @@ public class ListOfAvailablePlayersController implements Initializable {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
         }
+        new Thread(() -> {
+            String line;
+            try {
+                client = Client.getInstance();
+
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                BufferedReader bf = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
+                while (true){
+                    try {
+                        if ((line = inp.readLine()) != null) System.out.println(line);;
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }).start();
     }
+
 }
