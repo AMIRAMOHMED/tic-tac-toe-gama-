@@ -1,7 +1,9 @@
 package com.example.tictactoegama.controller;
 
+import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.interfaces.AIMoodOption;
 import com.example.tictactoegama.logic.MediumMood;
+import com.example.tictactoegama.logic.OnlineGamePlay;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import com.example.tictactoegama.views.SymbolSelectionDialog;
@@ -23,6 +25,8 @@ import javafx.animation.PauseTransition;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 
@@ -54,14 +58,25 @@ public class GameController {
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
-
     private static AIMoodOption aiMoodOption;
+    private Client client;
+    DataOutputStream output;
 
 
 
 
     @FXML
     public void initialize() {
+        try {
+            client = Client.getInstance();
+            output = new DataOutputStream(client.getSocket().getOutputStream());
+            output.writeUTF("Im good");
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        aiMoodOption = new OnlineGamePlay();
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
@@ -113,7 +128,12 @@ public class GameController {
             int row = GridPane.getRowIndex(clickedButton);
             int col = GridPane.getColumnIndex(clickedButton);
 
-            processPlayerMove(clickedButton, row, col);
+            try {
+                processPlayerMove(clickedButton, row, col);
+            } catch (IOException e) {
+                System.out.println("wtf");
+                throw new RuntimeException(e);
+            }
 
             if (!gameEnded) {
                 PauseTransition pause = new PauseTransition(Duration.seconds(0.1));
@@ -154,11 +174,13 @@ public class GameController {
         }*/
     }
 
-    private void processPlayerMove(Button clickedButton, int row, int col) {
+    private void processPlayerMove(Button clickedButton, int row, int col) throws IOException {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
         int flag = playBoard.play(row,col,currentPlayer.charAt(0));
-
+            System.out.println("Sending");
+            output.writeUTF(""+row*3+col);
+            System.out.println("Sending");
         if (flag== 1) {
             endGame(currentPlayer);
         }
@@ -174,6 +196,8 @@ public class GameController {
         }
         else if (flag==0){
             endGame("draw");
+        } else if (flag == 10) {
+            endGame(currentPlayer);
         }
         updateBoardUI();
     }
