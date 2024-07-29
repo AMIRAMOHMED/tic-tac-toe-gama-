@@ -9,6 +9,8 @@ import java.net.Socket;
 
 
 import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.models.User;
 
 import javafx.event.ActionEvent;
@@ -66,15 +68,9 @@ public class LoginController {
         System.out.println("Player JSON: " + playerJson); // Log the JSON string
 
         try {
-            if (client != null && client.isConnected()) {
-                Socket socket = client.getSocket();
-                PrintWriter dos = new PrintWriter(socket.getOutputStream());
-                dos.println("{\"RequestType\":\"Login\", \"User\":"+ playerJson+"}");
-                dos.flush();
-                BufferedReader inp = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                JSONObject resulr= new JSONObject(inp.readLine());
-                inp.close();
-                dos.close();
+                ClientHandler.send( "{\"RequestType\":\"Login\", \"User\":"+ playerJson+"}");
+                Thread.sleep(1000);
+                JSONObject resulr= new JSONObject(RequestHandler.getResponse());
                 int id =resulr.getInt("userid");
                 if (id>0) {
                     Client.userid = id;
@@ -90,12 +86,11 @@ public class LoginController {
                 }else {
                     showAlert("Error","Failed to update login status");
                 }
-            } else {
-                showAlert("Error", "Not connected to server.");
-            }
         } catch (IOException e) {
             e.printStackTrace();
             showAlert("Error", "Failed to communicate with server.");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -106,5 +101,8 @@ public class LoginController {
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    public String getResponse(String response){
+        return response;
     }
 }

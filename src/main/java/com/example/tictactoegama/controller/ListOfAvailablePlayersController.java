@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.Api.RequestHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -30,7 +32,7 @@ import org.json.JSONObject;
  *
  * @author filop
  */
-public class ListOfAvailablePlayersController implements Initializable {
+public class ListOfAvailablePlayersController extends Thread implements Initializable {
 
     /**
      * Initializes the controller class.
@@ -42,6 +44,8 @@ public class ListOfAvailablePlayersController implements Initializable {
     TextField txt;
     @FXML
     FlowPane noplayers;
+    @FXML
+    SVGPath refresh;
 
     Text playername;
     SVGPath status;
@@ -54,48 +58,30 @@ public class ListOfAvailablePlayersController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         items = new ArrayList<OnlinePlayerListItem>();
-        try {
-            client = Client.getInstance();
-            inp = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
-            dos = new PrintWriter(client.getSocket().getOutputStream(),true);
-            dos.println("{\"RequestType\":\"PlayerList\"}");
-            dos.flush();
-            JSONObject object = new JSONObject(inp.readLine());
+            ClientHandler.send("{\"RequestType\":\"PlayerList\"}");
+            JSONObject object = new JSONObject(RequestHandler.getResponse());
             JSONArray objarr = object.getJSONArray("PlayList");
-            if (!objarr.isEmpty()){
+            if (!objarr.isEmpty()) {
                 noplayers.setOpacity(0);
-                for (int i = 0 ; i< objarr.length();i++){
+                for (int i = 0; i < objarr.length(); i++) {
                     JSONObject item = objarr.getJSONObject(i);
-                    onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), item.getBoolean("isingame"),item.getInt("userid")));
+                    onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), item.getBoolean("isingame"), item.getInt("userid")));
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        }
-        new Thread(() -> {
-            String line;
-            try {
-                client = Client.getInstance();
-
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                BufferedReader bf = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
-                while (true){
-                    try {
-                        if ((line = inp.readLine()) != null) System.out.println(line);;
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+        refresh.setOnMouseClicked(event -> {
+            items = new ArrayList<OnlinePlayerListItem>();
+                ClientHandler.send("{\"RequestType\":\"PlayerList\"}");
+                JSONObject object2 = new JSONObject(RequestHandler.getResponse());
+                JSONArray objarr2 = object2.getJSONArray("PlayList");
+                if (!objarr.isEmpty()) {
+                    noplayers.setOpacity(0);
+                    for (int i = 0; i < objarr.length(); i++) {
+                        JSONObject item = objarr.getJSONObject(i);
+                        onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), item.getBoolean("isingame"), item.getInt("userid")));
                     }
                 }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
 
-        }).start();
+        });
     }
 
 }

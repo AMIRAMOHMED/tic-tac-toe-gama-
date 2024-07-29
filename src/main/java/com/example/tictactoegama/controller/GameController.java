@@ -67,16 +67,6 @@ public class GameController {
 
     @FXML
     public void initialize() {
-        try {
-            client = Client.getInstance();
-            output = new DataOutputStream(client.getSocket().getOutputStream());
-            output.writeUTF("Im good");
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        aiMoodOption = new OnlineGamePlay();
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
@@ -178,9 +168,6 @@ public class GameController {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
         int flag = playBoard.play(row,col,currentPlayer.charAt(0));
-            System.out.println("Sending");
-            output.writeUTF(""+row*3+col);
-            System.out.println("Sending");
         if (flag== 1) {
             endGame(currentPlayer);
         }

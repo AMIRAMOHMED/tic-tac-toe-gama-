@@ -1,6 +1,8 @@
 package com.example.tictactoegama.logic;
 
 import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.interfaces.AIMoodOption;
 import com.example.tictactoegama.models.PlayBoard;
 import org.json.JSONObject;
@@ -13,21 +15,11 @@ public class OnlineGamePlay implements AIMoodOption {
     char opponentSymbol;
     @Override
     public int makeMove(PlayBoard board, char opponentSymbol) {
-        try {
-            Client client = Client.getInstance();
-            DataInputStream input = new DataInputStream(client.getSocket().getInputStream());
-            int i = input.readInt();
+            int i = Integer.parseInt(RequestHandler.getResponse());
             if (i==10){
                 return 1;
             }
             return board.play(i, opponentSymbol);
-        } catch (IOException e) {
-            System.out.println("error 3");
-            return 0;
-        } catch (InstantiationException e) {
-            System.out.println("error 4");
-            return 0;
-        }
     }
 
 }

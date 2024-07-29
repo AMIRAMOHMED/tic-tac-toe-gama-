@@ -1,5 +1,6 @@
 package com.example.tictactoegama.controller;
 import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -7,9 +8,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.json.JSONObject;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -32,14 +33,8 @@ public class requestAlertBoxBase extends TitledPane {
     protected final Text accept;
     protected final Text decline;
     protected final Text text2;
-    private Client client;
-    PrintWriter output;
-    public requestAlertBoxBase(JSONObject object) {
-        try {
-            output = new PrintWriter(client.getSocket().getOutputStream(),true);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public requestAlertBoxBase(JSONObject obj , Stage stage) {
+        JSONObject object = obj.getJSONObject("Player");
         anchorPane = new AnchorPane();
         playername = new Text();
         flowPane = new FlowPane();
@@ -147,10 +142,8 @@ public class requestAlertBoxBase extends TitledPane {
         accept.setText("Accept");
         accept.setFont(new Font("Segoe UI Semibold", 14.0));
         accept.setOnMouseClicked(event -> {
-                output.println("{\"RequestType\":\"RequestGame\",\"Reply\":"+true+"}");
-                output.flush();
-                output.close();
-
+                ClientHandler.send("{\"RequestType\":\"RequestGame\",\"accepted\":"+true+"}");
+                stage.close();
         });
 
         decline.setFill(javafx.scene.paint.Color.valueOf("#ff827e"));
@@ -161,10 +154,8 @@ public class requestAlertBoxBase extends TitledPane {
         decline.setText("Decline");
         decline.setFont(new Font("Segoe UI Semibold", 14.0));
         decline.setOnMouseClicked(event -> {
-            output.println("{\"RequestType\":\"RequestGame\",\"Reply\":"+false+"}");
-            output.flush();
-            output.close();
-
+           ClientHandler.send("{\"RequestType\":\"RequestGame\",\"accepted\":"+false+"}");
+           stage.close();
         });
 
         text2.setLayoutX(138.0);

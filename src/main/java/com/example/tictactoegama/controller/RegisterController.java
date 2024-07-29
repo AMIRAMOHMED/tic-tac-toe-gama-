@@ -5,6 +5,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.models.User;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -69,34 +71,12 @@ public class RegisterController {
         String playerJson = player.toString(); // Convert Player object to JSON string
 
         System.out.println("Player JSON: " + playerJson); // Log the JSON string
+        ClientHandler.send("{\"RequestType\":\"Register\" ,\"User\":"+ playerJson+"}");
+            String resulr= null;
+            resulr = RequestHandler.getResponse();
+            System.out.println(resulr); // Log the request JSON
+            System.out.println("Data sent to server successfully."); // Log success message
 
-        try {
-            if (client != null && client.isConnected()) {
-                Socket socket = client.getSocket();
-                DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-                DataInputStream inp = new DataInputStream(socket.getInputStream());
-
-                JSONObject request = new JSONObject();
-                request.put("RequestType", "Register");
-                request.put("User", playerJson);
-
-                System.out.println("Request JSON: " + request.toString()); // Log the request JSON
-
-                dos.writeUTF("{\"RequestType\":\"Register\" ,\"User\":"+ playerJson+"}");
-                String resulr=inp.readUTF();
-                System.out.println(resulr); // Log the request JSON
-
-
-//
-
-                System.out.println("Data sent to server successfully."); // Log success message
-            } else {
-                showAlert("Error", "Not connected to server.");
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            showAlert("Error", "Failed to communicate with server.");
-        }
     }
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -1,6 +1,8 @@
 package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.logic.OnlineGamePlay;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -71,16 +73,14 @@ public class OnlinePlayerListItem extends AnchorPane{
         inviteButton.setBackground(Background.EMPTY);
         inviteButton.setText("invite");
         inviteButton.setOnAction(
-                event -> new Runnable() {
+                event ->new Thread( new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            PrintWriter output = new PrintWriter(client.getSocket().getOutputStream(),true);
-                            output.println("{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+userid+"}");
-                            BufferedReader reader = new BufferedReader(new InputStreamReader(client.getSocket().getInputStream()));
+                            ClientHandler.send( "{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+userid+"}");
                             String msg;
-                            while ((msg = reader.readLine()) != null) {
-                                JSONObject object = new JSONObject(reader.readLine());
+                            while ((msg = RequestHandler.getResponse()) != null) {
+                                JSONObject object = new JSONObject(msg);
                                 boolean accepted = object.getBoolean("accepted");
                                 if (accepted) {
                                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
@@ -102,7 +102,7 @@ public class OnlinePlayerListItem extends AnchorPane{
                             throw new RuntimeException(e);
                         }
                     }
-                }.run()
+                }).start()
         );
         getChildren().add(text);
         getChildren().add(sVGPath);

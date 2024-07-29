@@ -1,28 +1,16 @@
 package com.example.tictactoegama.Api;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 public class Client{
 
     public  static  int userid;
     private Socket socket;
-    private boolean isConnected;
     private static Client client;
     private static String ip;
+    private boolean isConnected;
     private static int port;
-    private BufferedReader input;
-    private PrintWriter output;
     public static Client getInstance() throws InstantiationException
     {
         if(client == null)
@@ -44,14 +32,12 @@ public class Client{
             socket = new Socket(IP, port);
             System.out.println("Connected to server at " + IP + " on port " + port);
             isConnected = true;
-            input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            output = new PrintWriter(socket.getOutputStream());
+            new ClientHandler(socket);
         } catch (IOException e) {
             e.printStackTrace();
-            isConnected = false;
+
         }
     }
-
     private Client(String IP) {
         this(IP, 5005);
     }
@@ -59,10 +45,4 @@ public class Client{
     public boolean isConnected() {
         return isConnected;
     }
-    public Socket getSocket() throws IOException {
-        if (socket.isClosed())
-            socket=new Socket(Client.ip,Client.port);
-        return socket;
-    }
-
 }

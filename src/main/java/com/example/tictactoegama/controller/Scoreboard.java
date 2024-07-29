@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.Api.RequestHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -34,12 +36,8 @@ public class Scoreboard implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            client = Client.getInstance();
-            output = new DataOutputStream(client.getSocket().getOutputStream());
-            input = new DataInputStream(client.getSocket().getInputStream());
-            output.writeUTF("{\"RequestType\":\"Scoreboard\"}");
-            JSONObject object = new JSONObject(input.readUTF());
+            ClientHandler.send( "{\"RequestType\":\"Scoreboard\"}");
+            JSONObject object = new JSONObject(RequestHandler.getResponse());
             JSONArray objarr = object.getJSONArray("Scoreboard");
             if (!objarr.isEmpty()){
                 for (int i = 0 ; i< objarr.length();i++){
@@ -47,11 +45,6 @@ public class Scoreboard implements Initializable {
                     nameList.getItems().add(new viewListIScoreboardBase(i+". "+ item.getString("username"), item.getInt("score")));
                 }
             }
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }    
     
     
