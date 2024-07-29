@@ -12,8 +12,9 @@ public class Client {
     private static Client client;
     private PrintWriter sender;
     private BufferedReader reader;
-
-    public  static Client getInstance() throws InstantiationException
+    private static String ip;
+    private static int port;
+    public static Client getInstance() throws InstantiationException
     {
         if(client == null)
         {
@@ -26,6 +27,8 @@ public class Client {
     public static void init(String ip, int port)
     {
         client = new Client(ip,port);
+        Client.ip=ip;
+        Client.port=port;
     }
     private  Client(String IP, int port) {
         try {
@@ -46,7 +49,9 @@ public class Client {
     public boolean isConnected() {
         return isConnected;
     }
-    public Socket getSocket() {
+    public Socket getSocket() throws IOException {
+        if (socket.isClosed())
+            socket=new Socket(Client.ip,Client.port);
         return socket;
     }
 

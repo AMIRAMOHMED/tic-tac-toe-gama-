@@ -15,6 +15,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -75,7 +76,7 @@ public class LoginController {
                 inp.close();
                 dos.close();
                 if (resulr.equals("Success")) {
-                    Stage stage = new Stage();
+                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                     Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
                     Scene registerScene = new Scene(root);
                     stage.setScene(registerScene);

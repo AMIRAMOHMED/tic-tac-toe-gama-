@@ -6,9 +6,8 @@
 package com.example.tictactoegama.controller;
 
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -48,32 +47,29 @@ public class ListOfAvailablePlayersController implements Initializable {
     SVGPath status;
     Button invite;
     ArrayList<OnlinePlayerListItem> items;
-    Client client;
-    DataOutputStream output;
-    DataInputStream input;
+    static Client client;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         items = new ArrayList<OnlinePlayerListItem>();
         try {
-            client = Client.getInstance();
-            output = new DataOutputStream(client.getSocket().getOutputStream());
-            input = new DataInputStream(client.getSocket().getInputStream());
-            output.writeUTF("{\"RequestType\":\"PlayerList\"}");
-            JSONObject object = new JSONObject(input.readUTF());
+            Socket socket = client.getSocket();
+            PrintWriter dos = new PrintWriter(socket.getOutputStream());
+            dos.println("{\"RequestType\":\"PlayerList\"}");
+            dos.flush();
+            BufferedReader inp = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            JSONObject object = new JSONObject(inp.readLine());
+            inp.close();
+            dos.close();
             JSONArray objarr = object.getJSONArray("PlayList");
             if (!objarr.isEmpty()){
                 noplayers.setOpacity(0);
                 for (int i = 0 ; i< objarr.length();i++){
                     JSONObject item = objarr.getJSONObject(i);
-                    onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), false));
+                    onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), item.getBoolean("isingame"),item.getInt("userid")));
                 }
             }
-
-
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
