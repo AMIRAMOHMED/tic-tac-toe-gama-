@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="55.0" prefWidth="466.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="playerNameLable" layoutX="28.0" layoutY="14.0" style="-fx-font-size: 18; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400;" text="1. PlayerName" />
+      <Label fx:id="scoreLable" layoutX="392.0" layoutY="14.0" style="-fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-size: 18; -fx-font-weight: 500; -fx-text-fill: #FFB048;" text="225" />
+   </children>
+</AnchorPane>
