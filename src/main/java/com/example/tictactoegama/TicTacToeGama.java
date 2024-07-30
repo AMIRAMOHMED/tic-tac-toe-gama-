@@ -12,8 +12,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class TicTacToeGama extends Application {
+    static Stage stage;
     @Override
     public void start(Stage stage) throws IOException {
+        TicTacToeGama.stage = stage;
         FXMLLoader fxmlLoader = new FXMLLoader(TicTacToeGama.class.getResource("/com/example/tictactoegama/views/hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 800, 600);
         stage.setTitle("Tic Tac Toe");
@@ -34,5 +36,8 @@ public class TicTacToeGama extends Application {
     public static void main(String[] args) {
         launch();
 
+    }
+    public static Stage getStage(){
+        return stage;
     }
 }

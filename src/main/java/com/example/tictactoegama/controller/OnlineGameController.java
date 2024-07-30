@@ -10,6 +10,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -23,8 +24,10 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
-public class OnlineGameController {
+public class OnlineGameController implements Initializable {
     private static boolean flag;
     @FXML
     private Text gameStatus;
@@ -32,54 +35,70 @@ public class OnlineGameController {
     @FXML
     private GridPane gameGrid;
     @FXML
-    private String currentPlayer;
+    private static String currentPlayer;
     @FXML
     Button replayBtn;
     @FXML
     private Line winnerLine;
     @FXML
-    static Label playerXNametxt;
+    Label playerXNametxt;
+    static String playerx;
     @FXML
-    static Label playerONametxt;
+    Label playerONametxt;
+    static String playero;
     @FXML
-    static Label OScoreLabel;
+    Label OScoreLabel;
+    static String playerOscore;
     @FXML
-    static Label XScoreLabel;
-    @FXML
-    static int playerScore, computerScore;
+    Label XScoreLabel;
+    static String playerXscore;
     static String globalPlayerSymbol;
     private Scene originalGameScene;
     private boolean isDraw;
-    private String computerSymbol;
+    private static String computerSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
     private static AIMoodOption aiMoodOption;
 
-    public static void setPlayers(boolean flag,Player user, Player opponent){
+    public synchronized static void setPlayers(boolean flag,Player user, Player opponent){
         OnlineGameController.flag = !flag;
-        XScoreLabel.setText(""+user.getScore());
-        playerXNametxt.setText(user.getUsername());
-        OScoreLabel.setText(""+opponent.getScore());
-        playerONametxt.setText(opponent.getUsername());
+        playerOscore = ""+ user.getScore();
+        playerXscore= "" + opponent.getScore();
+        playerx = user.getUsername();
+        playero = opponent.getUsername();
+        if (flag) {
+            currentPlayer = "X";
+            computerSymbol = "O";
+        }
+        else {
+            currentPlayer = "O";
+            computerSymbol = "X";
+        }
     }
 
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         playBoard = new PlayBoard();
         gameEnded = false;
         videoViewHandler = new VideoViewHandler();
-
+        Platform.runLater(()->{
+        XScoreLabel.setText(playerXscore);
+        playerXNametxt.setText(playerx);
+        OScoreLabel.setText(playerOscore);
+        playerONametxt.setText(playero);
+        });
     }
-
-
 
     @FXML
     private void handleButtonClick(ActionEvent event) {
-        if (gameEnded || flag) {
+        if (gameEnded) {
             disableButtons();
         }
-
+        if (flag){
+                disableButtons();
+                processComputerMove();
+        }
         Button clickedButton = (Button) event.getSource();
         if (clickedButton.getText().isEmpty()) {
             int row = GridPane.getRowIndex(clickedButton);
@@ -91,24 +110,13 @@ public class OnlineGameController {
                 System.out.println("wtf");
                 throw new RuntimeException(e);
             }
-
-            if (!gameEnded) {
-                PauseTransition pause = new PauseTransition(Duration.seconds(0.1));
-                pause.setOnFinished(e -> processComputerMove());
-                pause.play();
-            }
         }
     }
 
-    private synchronized void OpponentStart(){
-        processComputerMove();
-
-    }
 
     @FXML
     public void handleGoBack(ActionEvent event) throws IOException {
-        computerScore = 0;
-        playerScore = 0;
+
         Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
         Scene optionPageScene = new Scene(optionPageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -118,12 +126,6 @@ public class OnlineGameController {
 
     @FXML
     public void handleReplay(ActionEvent event) throws IOException {
-        if (currentPlayer == globalPlayerSymbol) {
-            playerScore += 1;
-        } else {
-            computerScore += 1;
-        }
-
         Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
         Scene gamePageScene = new Scene(gamePageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -142,8 +144,7 @@ public class OnlineGameController {
             endGame("draw");
         }
     }
-
-    private void processComputerMove() {
+    private synchronized void processComputerMove() {
         int flag = aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0));
         if (flag == 1) {
             endGame(computerSymbol);
@@ -152,10 +153,9 @@ public class OnlineGameController {
         } else if (flag == 10) {
             endGame(currentPlayer);
         }
+        enableButtons();
         updateBoardUI();
     }
-
-
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
             button.setStyle(
@@ -213,7 +213,6 @@ public class OnlineGameController {
         final String finalVideoPath = videoPath;
         PauseTransition delay = new PauseTransition(Duration.seconds(1));
         delay.setOnFinished(event -> {
-
             Stage stage = new Stage();
             videoViewHandler.showVideoView(stage, finalVideoPath);
             stage.show();
@@ -275,4 +274,5 @@ public class OnlineGameController {
         }
         return null;
     }
+
 }

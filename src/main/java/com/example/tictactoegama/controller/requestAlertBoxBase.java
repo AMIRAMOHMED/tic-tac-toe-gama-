@@ -143,7 +143,7 @@ public class requestAlertBoxBase extends TitledPane {
         accept.setText("Accept");
         accept.setFont(new Font("Segoe UI Semibold", 14.0));
         accept.setOnMouseClicked(event -> {
-                ClientHandler.send("{\"RequestType\":\"RequestGameResponse\",\"Value\":"+true+" , \"userid\":"+player.getUserid()+", \"opponentid\":"+Client.userid+"}");
+                ClientHandler.send("{\"RequestType\":\"RequestGameResponse\",\"Value\":"+true+" , \"userid\":"+player.getUserid()+", \"opponentid\":"+Client.user.getUserid()+"}");
                 stage.close();
         });
 

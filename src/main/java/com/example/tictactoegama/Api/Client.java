@@ -1,16 +1,19 @@
 package com.example.tictactoegama.Api;
 
+import com.example.tictactoegama.models.Player;
+
 import java.io.IOException;
 import java.net.Socket;
 
 public class Client{
 
-    public  static  int userid;
+    public  static Player user;
     private static Socket socket;
     private static Client client;
     private static String ip;
     private boolean isConnected;
     private static int port;
+
     public static Client getInstance() throws InstantiationException
     {
         if(client == null)
@@ -45,4 +48,5 @@ public class Client{
     public boolean isConnected() {
         return isConnected;
     }
+
 }

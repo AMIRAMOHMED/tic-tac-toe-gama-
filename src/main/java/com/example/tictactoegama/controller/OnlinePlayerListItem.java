@@ -68,7 +68,7 @@ public class OnlinePlayerListItem extends AnchorPane{
         inviteButton.setText("invite");
         inviteButton.setOnAction((event)->{
             this.event=event;
-            ClientHandler.send( "{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+player.getUserid()+"}");
+            ClientHandler.send( "{\"RequestType\":\"RequestGame\",\"userid\":"+Client.user.getUserid()+",\"opponentid\":"+player.getUserid()+"}");
             Platform.runLater(()-> inviteButton.setText(". . ."));
             }
         );
