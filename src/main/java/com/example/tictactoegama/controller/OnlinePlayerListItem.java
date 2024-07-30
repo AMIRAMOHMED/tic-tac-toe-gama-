@@ -2,7 +2,6 @@ package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.Api.ClientHandler;
-import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.logic.OnlineGamePlay;
 import com.example.tictactoegama.models.Player;
 import javafx.application.Platform;
@@ -18,11 +17,8 @@ import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import org.json.JSONObject;
-import java.io.BufferedReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 
 public class OnlinePlayerListItem extends AnchorPane{
 
@@ -75,28 +71,11 @@ public class OnlinePlayerListItem extends AnchorPane{
             ClientHandler.send( "{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+player.getUserid()+"}");
             Platform.runLater(()-> inviteButton.setText(". . ."));
             }
-
         );
         getChildren().add(text);
         getChildren().add(sVGPath);
         getChildren().add(text0);
         getChildren().add(inviteButton);
-
-    }
-    public static void gotoGame(){
-        FXMLLoader loader = new FXMLLoader(OnlinePlayerListItem.class.getResource("/com/example/tictactoegama/views/gama-page.fxml"));
-        try {
-            Parent gamePageParent = loader.load();
-            GameController gameController = loader.getController();
-            gameController.setAiMoodOption(new OnlineGamePlay());
-
-            Scene gamePageScene = new Scene(gamePageParent);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(gamePageScene);
-            window.show();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
 
     }
 }

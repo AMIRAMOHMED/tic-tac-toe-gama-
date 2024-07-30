@@ -85,6 +85,7 @@ public class Player {
     public void setLosses(int losses) {
         this.losses = losses;
     }
+    public int getScore() {return score;}
     public void setScore(){
         score = wins-losses;
     }

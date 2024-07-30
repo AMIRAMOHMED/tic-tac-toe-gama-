@@ -49,17 +49,14 @@ public class GameController {
     Label playerXNametxt, playerONametxt, OScoreLabel, XScoreLabel;
     static int playerScore, computerScore;
     static String globalPlayerSymbol;
-
     private Scene originalGameScene;
     private boolean isDraw;
-    boolean isLocal;
     private String computerSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
     private static AIMoodOption aiMoodOption;
-    private Client client;
-    DataOutputStream output;
+
 
 
     @FXML

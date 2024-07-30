@@ -1,11 +1,9 @@
 package com.example.tictactoegama.Api;
 
 import com.example.tictactoegama.constants.RequestType;
-import com.example.tictactoegama.controller.GameController;
-import com.example.tictactoegama.controller.LoginController;
-import com.example.tictactoegama.controller.RegisterController;
-import com.example.tictactoegama.controller.requestAlertBoxBase;
+import com.example.tictactoegama.controller.*;
 import com.example.tictactoegama.logic.MediumMood;
+import com.example.tictactoegama.logic.OnlineGamePlay;
 import com.example.tictactoegama.models.Player;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -19,7 +17,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Vector;
-import static com.example.tictactoegama.constants.RequestType.*;
 
 public class RequestHandler {
     private static Vector<Player> playerList;
@@ -61,6 +58,8 @@ public class RequestHandler {
             case Scoreboard:
                 break;
             case GameHistory:
+                break;
+            case Ignore:
                 break;
         };
     }
@@ -132,8 +131,8 @@ public class RequestHandler {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            GameController gameController = loader.getController();
-            gameController.setAiMoodOption(new MediumMood());
+            GameController onlineGameController = loader.getController();
+            onlineGameController.setAiMoodOption(new OnlineGamePlay());
             Scene gamePageScene = new Scene(gamePageParent);
             Stage window = new Stage();
             window.setScene(gamePageScene);
