@@ -27,6 +27,11 @@ public class TicTacToeGama extends Application {
         stage.setOnCloseRequest(event -> {
             if (ClientHandler.th != null && ClientHandler.th.isAlive()){
                 ClientHandler.th.stop();
+                try {
+                    ClientHandler.socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 if (ListOfAvailablePlayersController.th != null && ListOfAvailablePlayersController.th.isAlive()){
                     ListOfAvailablePlayersController.th.stop();
                 }

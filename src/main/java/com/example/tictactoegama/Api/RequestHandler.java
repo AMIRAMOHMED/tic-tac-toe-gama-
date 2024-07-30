@@ -3,12 +3,9 @@ package com.example.tictactoegama.Api;
 import com.example.tictactoegama.TicTacToeGama;
 import com.example.tictactoegama.constants.RequestType;
 import com.example.tictactoegama.controller.*;
-import com.example.tictactoegama.logic.MediumMood;
-import com.example.tictactoegama.logic.OnlineGamePlay;
 import com.example.tictactoegama.models.Player;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -16,14 +13,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.awt.event.ActionEvent;
 import java.io.IOException;
-import java.lang.ref.Cleaner;
 import java.util.HashMap;
 import java.util.Vector;
 
 public class RequestHandler {
+    private static boolean isgameended = false;
+    public static int index = -1;
     private static Vector<Player> playerList;
     private static Vector<Player> opponentList = new Vector<>();
     private static HashMap<RequestType, Long> lastUpdate = new HashMap<>();
@@ -37,6 +33,9 @@ public class RequestHandler {
                 break;
             case Login:
                 getLogin(object);
+                break;
+            case InGame:
+                index = (object.getInt("play"));
                 break;
             case RequestGame:
                 requestGameDialog(object);
@@ -66,7 +65,23 @@ public class RequestHandler {
                 break;
             case Ignore:
                 break;
+            case GameEnded:
+                setGameEnded(true);
+                break;
         };
+    }
+    public static boolean getGameEnded(){
+        return isgameended;
+    }
+    private static void setGameEnded(boolean isended) {
+        isgameended =  isended;
+    }
+
+    public static void setIndex(int i){
+        index=i;
+    }
+    public synchronized static int getPlay(){
+        return index;
     }
     private static synchronized void getRegister(JSONObject object){
         if (object.getInt("value")==11){
@@ -137,19 +152,14 @@ public class RequestHandler {
                 Stage window = TicTacToeGama.getStage();
                 window.setScene(gamePageScene);
                 Player opponent =  Player.fromJson(object.getJSONObject("opponent"));
+                System.out.println("Here");
                 System.out.println(opponent);
                 System.out.println(Client.user);
-                if(Client.user.getUserid() == opponent.getUserid()){
-                    System.out.println("opponent");
-                    OnlineGameController.setPlayers(true , opponent, Client.user);
-                }
-                else {
-                    System.out.println("user");
-                    OnlineGameController.setPlayers(false, Client.user , opponent);
-                }
+                System.out.println("---------------");
+                    OnlineGameController.setPlayers(object.getBoolean("flag"), Client.user , opponent);
                 window.show();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         });
     }

@@ -1,10 +1,11 @@
 package com.example.tictactoegama.controller;
 
-import com.example.tictactoegama.interfaces.AIMoodOption;
+import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.Player;
 import com.example.tictactoegama.models.VideoViewHandler;
-import com.example.tictactoegama.views.SymbolSelectionDialog;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -22,12 +23,20 @@ import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class OnlineGameController implements Initializable {
+    public static OnlineGameController onlineGameController;
+
+    public OnlineGameController(){
+        onlineGameController = this;
+    }
     private static boolean flag;
     @FXML
     private Text gameStatus;
@@ -52,33 +61,40 @@ public class OnlineGameController implements Initializable {
     @FXML
     Label XScoreLabel;
     static String playerXscore;
-    static String globalPlayerSymbol;
-    private Scene originalGameScene;
-    private boolean isDraw;
-    private static String computerSymbol;
+    private static String opponentSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
-    private static AIMoodOption aiMoodOption;
+    private static Player user;
+    private static Player opponent;
+    Thread th;
 
+    private BufferedReader input;
     public synchronized static void setPlayers(boolean flag,Player user, Player opponent){
-        OnlineGameController.flag = !flag;
-        playerOscore = ""+ user.getScore();
-        playerXscore= "" + opponent.getScore();
+        OnlineGameController.user = user;
+        OnlineGameController.opponent = opponent;
+        playerOscore = ""+ opponent.getScore();
+        playerXscore= "" + user.getScore();
         playerx = user.getUsername();
         playero = opponent.getUsername();
-        if (flag) {
-            currentPlayer = "X";
-            computerSymbol = "O";
+        OnlineGameController.flag = !flag;
+        if (OnlineGameController.flag) {
+            currentPlayer = "O";
+            opponentSymbol = "X";
         }
         else {
-            currentPlayer = "O";
-            computerSymbol = "X";
+            currentPlayer = "X";
+            opponentSymbol = "O";
         }
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        try {
+            input = new BufferedReader(new InputStreamReader(ClientHandler.socket.getInputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         playBoard = new PlayBoard();
         gameEnded = false;
         videoViewHandler = new VideoViewHandler();
@@ -87,28 +103,37 @@ public class OnlineGameController implements Initializable {
         playerXNametxt.setText(playerx);
         OScoreLabel.setText(playerOscore);
         playerONametxt.setText(playero);
+        gameStatus.setText(playerx);
+        if(!flag){
+            disableButtons();
+            System.out.println("not my turn");
+            processComputerMove();
+            System.out.println("listening");
+        }
         });
+
     }
 
     @FXML
     private void handleButtonClick(ActionEvent event) {
         if (gameEnded) {
-            disableButtons();
-        }
-        if (flag){
-                disableButtons();
-                processComputerMove();
+            Platform.runLater(()->disableButtons());
         }
         Button clickedButton = (Button) event.getSource();
         if (clickedButton.getText().isEmpty()) {
             int row = GridPane.getRowIndex(clickedButton);
             int col = GridPane.getColumnIndex(clickedButton);
-
             try {
                 processPlayerMove(clickedButton, row, col);
+                if (!gameEnded) {
+                    System.out.println("played move and listening");
+                    processComputerMove();
+                    if (gameEnded){
+                        Platform.runLater(()->disableButtons());
+                    }
+                }
             } catch (IOException e) {
-                System.out.println("wtf");
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
         }
     }
@@ -126,16 +151,24 @@ public class OnlineGameController implements Initializable {
 
     @FXML
     public void handleReplay(ActionEvent event) throws IOException {
+        if (gameEnded){
+            Platform.runLater(()->disableButtons());
+        }
         Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
         Scene gamePageScene = new Scene(gamePageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gamePageScene);
         window.show();
     }
-
     private void processPlayerMove(Button clickedButton, int row, int col) throws IOException {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
+        int index = row*3+col;
+        ClientHandler.send("{\"RequestType\":\"InGame\", \"value\":"+index+", \"Player\":"+opponent+"}");
+        Platform.runLater(()-> {
+            updateBoardUI();
+            disableButtons();
+        });
         int flag = playBoard.play(row, col, currentPlayer.charAt(0));
         if (flag == 1) {
             endGame(currentPlayer);
@@ -144,17 +177,34 @@ public class OnlineGameController implements Initializable {
             endGame("draw");
         }
     }
-    private synchronized void processComputerMove() {
-        int flag = aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0));
-        if (flag == 1) {
-            endGame(computerSymbol);
-        } else if (flag == 0) {
-            endGame("draw");
-        } else if (flag == 10) {
-            endGame(currentPlayer);
-        }
-        enableButtons();
-        updateBoardUI();
+    private void processComputerMove() {
+            th = new Thread(()->{
+                int i;
+                i=RequestHandler.getPlay();
+            while((i= RequestHandler.getPlay())<0) {
+            }
+                int flag = playBoard.play(i, opponentSymbol.charAt(0));
+                if (flag == 1) {
+                    endGame(opponentSymbol);
+                } else if (flag == 0) {
+                    endGame("draw");
+                } else if (flag == 10) {
+                    endGame(currentPlayer);
+                }
+        Platform.runLater(()-> {
+            updateBoardUI();
+            enableButtons();
+        });
+            });
+            th.start();
+            if(!th.isInterrupted()){
+                RequestHandler.index = -1;
+                th.resume();
+                if (gameEnded){
+                    Platform.runLater(()->disableButtons());
+                    th.stop();
+                }
+            }
     }
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
@@ -175,66 +225,72 @@ public class OnlineGameController implements Initializable {
     }
 
     private void updateBoardUI() {
-        char[][] board = playBoard.getBoard();
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                char symbol = board[i][j];
-                if (symbol != '_') {
-                    Button button = (Button) getNodeByRowColumnIndex(i, j);
-                    if (button != null) {
-                        button.setText(String.valueOf(symbol));
-                        updateButtonStyle(button, String.valueOf(symbol));
+        Platform.runLater(()->{
+            char[][] board = playBoard.getBoard();
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    char symbol = board[i][j];
+                    if (symbol != '_') {
+                        Button button = (Button) getNodeByRowColumnIndex(i, j);
+                        if (button != null) {
+                            button.setText(String.valueOf(symbol));
+                            updateButtonStyle(button, String.valueOf(symbol));
+                        }
                     }
                 }
             }
-        }
+        });
     }
 
 
     private void endGame(String winner) {
+        ClientHandler.send("{\"RequestType\":\"GameEnded\",\"Player\":"+opponent+"}");
+            String videoPath = "";
+            if (winner.equals(currentPlayer)) {
+                videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
 
-        String videoPath = "";
-        if (winner.equals(currentPlayer)) {
-            videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
-
-        } else if (winner.equals(computerSymbol)) {
-            videoPath = "src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
-        } else if (winner.equals("draw")) {
-            videoPath =
-                    "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
-        } else {
-            return;
-        }
-        disableButtons();
-        gameEnded = true;
-        drawWinnerLine(playBoard.getWinningTiles());
-        winnerLine.setVisible(true);
-        replayBtn.setVisible(true);
-        final String finalVideoPath = videoPath;
-        PauseTransition delay = new PauseTransition(Duration.seconds(1));
-        delay.setOnFinished(event -> {
-            Stage stage = new Stage();
-            videoViewHandler.showVideoView(stage, finalVideoPath);
-            stage.show();
-        });
-        delay.play();
+            } else if (winner.equals(opponentSymbol)) {
+                videoPath = "src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
+            } else if (winner.equals("draw")) {
+                videoPath =
+                        "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
+            } else {
+                return;
+            }
+            disableButtons();
+            gameEnded = true;
+            drawWinnerLine(playBoard.getWinningTiles());
+            winnerLine.setVisible(true);
+            replayBtn.setVisible(true);
+            final String finalVideoPath = videoPath;
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+            delay.setOnFinished(event -> {
+                Stage stage = new Stage();
+                videoViewHandler.showVideoView(stage, finalVideoPath);
+                stage.show();
+            });
+            delay.play();
     }
 
 
     private void disableButtons() {
-        for (Node node : gameGrid.getChildren()) {
-            if (node instanceof Button) {
-                node.setDisable(true);
+        Platform.runLater(() -> {
+            for (Node node : gameGrid.getChildren()) {
+                if (node instanceof Button) {
+                    node.setDisable(true);
+                }
             }
-        }
+        });
     }
 
     private void enableButtons() {
-        for (Node node : gameGrid.getChildren()) {
-            if (node instanceof Button) {
-                node.setDisable(false);
+        Platform.runLater(() -> {
+            for (Node node : gameGrid.getChildren()) {
+                if (node instanceof Button) {
+                    node.setDisable(false);
+                }
             }
-        }
+        });
     }
 
 
@@ -263,8 +319,6 @@ public class OnlineGameController implements Initializable {
             winnerLine.setVisible(true);
         }
     }
-
-
     private Node getNodeByRowColumnIndex(final int row, final int column) {
         for (Node node : gameGrid.getChildren()) {
             if (GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == row &&
@@ -274,5 +328,4 @@ public class OnlineGameController implements Initializable {
         }
         return null;
     }
-
 }

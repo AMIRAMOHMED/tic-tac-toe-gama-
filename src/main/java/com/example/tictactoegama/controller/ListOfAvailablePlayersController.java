@@ -59,6 +59,9 @@ public class ListOfAvailablePlayersController implements Initializable {
                     Vector<Player> players = RequestHandler.getPlayerList();
                         noplayers.setOpacity(0);
                         for (int i = 0; i < players.size(); i++) {
+                            if (players.get(i).getUserid() == Client.user.getUserid()){
+                                continue;
+                            }
                             onlinePlayers.getChildren().add(new OnlinePlayerListItem(players.get(i)));
                     }
                 });
@@ -74,6 +77,9 @@ public class ListOfAvailablePlayersController implements Initializable {
                                 } else {
                                     noplayers.setOpacity(0);
                                     for (int i = 0; i < players.size(); i++) {
+                                        if (players.get(i).getUserid() == Client.user.getUserid()){
+                                            continue;
+                                        }
                                         onlinePlayers.getChildren().add(new OnlinePlayerListItem(players.get(i)));
                                     }
                                 }
@@ -87,8 +93,12 @@ public class ListOfAvailablePlayersController implements Initializable {
         refresh.setOnMouseClicked(event -> {
             Platform.runLater(()->{
                 Vector<Player> players = RequestHandler.getPlayerList();
+                players.remove(Client.user);
                 noplayers.setOpacity(0);
                 for (int i = 0; i < players.size(); i++) {
+                    if (players.get(i).getUserid() == Client.user.getUserid()){
+                        continue;
+                    }
                     onlinePlayers.getChildren().add(new OnlinePlayerListItem(players.get(i)));
                 }
             });

@@ -12,4 +12,5 @@ public enum RequestType {
     GameHistory,
     RequestGameResponse,
     Ignore,
+    GameEnded,
 }

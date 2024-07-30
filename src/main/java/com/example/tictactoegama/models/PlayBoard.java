@@ -16,7 +16,7 @@ public class PlayBoard {
         return board;
     }
 
-        /**
+    /**
      * @param x row Position
      * @param y Column Position
      * @param symbol Player Symbol
@@ -51,7 +51,7 @@ public class PlayBoard {
                 win = 1; // Win by reverse diagonal
                 for (int i = 0; i < 3; i++) winningTiles[i] = new int[]{i, 2 - i};
             }
-           
+
         }
         if (win == -1 && counter == 9) {
             win = 0; // Draw
@@ -62,10 +62,8 @@ public class PlayBoard {
 
     public  int play(int i,char symbol){
         int x=0,y=0;
-        for(int j =0 ; j<i;j++){
-            if(i==3) x++;
-            y=i%3;
-        }
+        x=i/3;
+        y=i%3;
         int col = 0, row = 0, diag = 0, rdiag = 0;
         board[x][y] = symbol;
         counter++;
@@ -100,6 +98,7 @@ public class PlayBoard {
 
         return win;
     }
+
 
     public int[][] getWinningTiles() {
         return winningTiles;

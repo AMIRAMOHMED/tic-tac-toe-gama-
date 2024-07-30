@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandler{
-    private static Socket socket;
+    public static Socket socket;
     private static BufferedReader reader;
     private static PrintWriter sender;
     public static Thread th;
@@ -17,7 +17,11 @@ public class ClientHandler{
         ClientHandler.socket = socket;
         applySender();
         applyReader();
-        listen();
+        try {
+            listen();
+        } catch (InterruptedException e) {
+            disconnect();
+        }
     }
 
     public static void send(Object data) {
@@ -32,10 +36,9 @@ public class ClientHandler{
             socket.close();
         } catch (Exception e) {
             e.printStackTrace();
-
         }
     }
-    private void listen() {
+    private void listen() throws InterruptedException {
         th = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -45,7 +48,7 @@ public class ClientHandler{
                         System.out.println(line);
                         RequestHandler.getResponse(line);
                     }
-                }  catch (IOException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
                 disconnect();
