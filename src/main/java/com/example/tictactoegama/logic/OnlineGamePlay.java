@@ -15,7 +15,7 @@ public class OnlineGamePlay implements AIMoodOption {
     char opponentSymbol;
     @Override
     public int makeMove(PlayBoard board, char opponentSymbol) {
-            int i = Integer.parseInt(RequestHandler.getResponse());
+            int i = Integer.parseInt("RequestHandler.getResponse()");
             if (i==10){
                 return 1;
             }

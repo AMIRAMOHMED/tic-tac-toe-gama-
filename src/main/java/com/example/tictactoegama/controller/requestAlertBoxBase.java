@@ -1,6 +1,7 @@
 package com.example.tictactoegama.controller;
 import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.Api.ClientHandler;
+import com.example.tictactoegama.models.Player;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -34,7 +35,7 @@ public class requestAlertBoxBase extends TitledPane {
     protected final Text decline;
     protected final Text text2;
     public requestAlertBoxBase(JSONObject obj , Stage stage) {
-        JSONObject object = obj.getJSONObject("Player");
+        Player player = Player.fromJson(obj.getJSONObject("Player"));
         anchorPane = new AnchorPane();
         playername = new Text();
         flowPane = new FlowPane();
@@ -68,7 +69,7 @@ public class requestAlertBoxBase extends TitledPane {
         playername.setLayoutY(37.0);
         playername.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         playername.setStrokeWidth(0.0);
-        playername.setText(object.getString("username"));
+        playername.setText(player.getUsername());
         playername.setFont(new Font("Segoe UI Bold", 24.0));
 
         flowPane.setHgap(10.0);
@@ -83,7 +84,7 @@ public class requestAlertBoxBase extends TitledPane {
 
         wins.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         wins.setStrokeWidth(0.0);
-        wins.setText(""+object.getInt("wins"));
+        wins.setText(""+player.getWins());
         wins.setFont(new Font("Segoe UI", 24.0));
 
         text.setFill(javafx.scene.paint.Color.valueOf("#adadad"));
@@ -104,7 +105,7 @@ public class requestAlertBoxBase extends TitledPane {
 
         losses.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         losses.setStrokeWidth(0.0);
-        losses.setText(""+object.getInt("losses"));
+        losses.setText(""+player.getLosses());
         losses.setFont(new Font("Segoe UI", 24.0));
 
         text0.setFill(javafx.scene.paint.Color.valueOf("#adadad"));
@@ -125,7 +126,7 @@ public class requestAlertBoxBase extends TitledPane {
 
         draws.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         draws.setStrokeWidth(0.0);
-        draws.setText(""+object.getInt("draws"));
+        draws.setText(""+player.getDraws());
         draws.setFont(new Font("Segoe UI", 24.0));
 
         text1.setFill(javafx.scene.paint.Color.valueOf("#adadad"));
@@ -142,7 +143,7 @@ public class requestAlertBoxBase extends TitledPane {
         accept.setText("Accept");
         accept.setFont(new Font("Segoe UI Semibold", 14.0));
         accept.setOnMouseClicked(event -> {
-                ClientHandler.send("{\"RequestType\":\"RequestGame\",\"accepted\":"+true+"}");
+                ClientHandler.send("{\"RequestType\":\"RequestGameResponse\",\"Value\":"+true+" , \"userid\":"+player.getUserid()+", \"opponentid\":"+Client.userid+"}");
                 stage.close();
         });
 
@@ -154,7 +155,6 @@ public class requestAlertBoxBase extends TitledPane {
         decline.setText("Decline");
         decline.setFont(new Font("Segoe UI Semibold", 14.0));
         decline.setOnMouseClicked(event -> {
-           ClientHandler.send("{\"RequestType\":\"RequestGame\",\"accepted\":"+false+"}");
            stage.close();
         });
 

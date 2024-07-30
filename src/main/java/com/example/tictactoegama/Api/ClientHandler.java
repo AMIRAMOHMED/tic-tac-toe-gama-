@@ -10,6 +10,7 @@ public class ClientHandler{
     private Socket socket;
     private static BufferedReader reader;
     private static PrintWriter sender;
+    public static Thread th;
     public ClientHandler(Socket socket) {
         this.socket = socket;
         applySender();
@@ -33,21 +34,22 @@ public class ClientHandler{
         }
     }
     private void listen() {
-        new Thread(new Runnable() {
+        th = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     String line = "";
                     while ((line = reader.readLine()) != null) {
                         System.out.println(line);
-                        RequestHandler.setResponse(line);
+                        RequestHandler.getResponse(line);
                     }
                 }  catch (IOException e) {
                     e.printStackTrace();
                 }
                 disconnect();
             }
-        }).start();
+        });
+        th.start();
     }
 
     private void applySender() {

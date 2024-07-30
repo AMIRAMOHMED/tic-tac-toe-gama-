@@ -6,7 +6,7 @@ import java.net.Socket;
 public class Client{
 
     public  static  int userid;
-    private Socket socket;
+    private static Socket socket;
     private static Client client;
     private static String ip;
     private boolean isConnected;

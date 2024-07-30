@@ -37,7 +37,7 @@ public class Scoreboard implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
             ClientHandler.send( "{\"RequestType\":\"Scoreboard\"}");
-            JSONObject object = new JSONObject(RequestHandler.getResponse());
+            JSONObject object = new JSONObject("RequestHandler.getResponse()");
             JSONArray objarr = object.getJSONArray("Scoreboard");
             if (!objarr.isEmpty()){
                 for (int i = 0 ; i< objarr.length();i++){

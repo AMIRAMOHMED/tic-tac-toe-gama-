@@ -11,10 +11,13 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.Api.ClientHandler;
 import com.example.tictactoegama.Api.RequestHandler;
+import com.example.tictactoegama.models.Player;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -24,6 +27,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -32,7 +36,7 @@ import org.json.JSONObject;
  *
  * @author filop
  */
-public class ListOfAvailablePlayersController extends Thread implements Initializable {
+public class ListOfAvailablePlayersController implements Initializable {
 
     /**
      * Initializes the controller class.
@@ -47,41 +51,48 @@ public class ListOfAvailablePlayersController extends Thread implements Initiali
     @FXML
     SVGPath refresh;
 
-    Text playername;
-    SVGPath status;
-    Button invite;
-    ArrayList<OnlinePlayerListItem> items;
-    Client client;
-    BufferedReader inp;
-    PrintWriter dos;
-
+    public static Thread th;
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        items = new ArrayList<OnlinePlayerListItem>();
             ClientHandler.send("{\"RequestType\":\"PlayerList\"}");
-            JSONObject object = new JSONObject(RequestHandler.getResponse());
-            JSONArray objarr = object.getJSONArray("PlayList");
-            if (!objarr.isEmpty()) {
-                noplayers.setOpacity(0);
-                for (int i = 0; i < objarr.length(); i++) {
-                    JSONObject item = objarr.getJSONObject(i);
-                    onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), item.getBoolean("isingame"), item.getInt("userid")));
-                }
-            }
-        refresh.setOnMouseClicked(event -> {
-            items = new ArrayList<OnlinePlayerListItem>();
-                ClientHandler.send("{\"RequestType\":\"PlayerList\"}");
-                JSONObject object2 = new JSONObject(RequestHandler.getResponse());
-                JSONArray objarr2 = object2.getJSONArray("PlayList");
-                if (!objarr.isEmpty()) {
-                    noplayers.setOpacity(0);
-                    for (int i = 0; i < objarr.length(); i++) {
-                        JSONObject item = objarr.getJSONObject(i);
-                        onlinePlayers.getChildren().add(new OnlinePlayerListItem(item.getString("username"), item.getBoolean("isingame"), item.getInt("userid")));
+                Platform.runLater(()->{
+                    Vector<Player> players = RequestHandler.getPlayerList();
+                        noplayers.setOpacity(0);
+                        for (int i = 0; i < players.size(); i++) {
+                            onlinePlayers.getChildren().add(new OnlinePlayerListItem(players.get(i)));
                     }
+                });
+               th = new Thread(()->{
+                    while (true) {
+                        try {
+                            Thread.sleep(1000);
+                            Platform.runLater(() -> {
+                                onlinePlayers.getChildren().clear();
+                                Vector<Player> players = RequestHandler.getPlayerList();
+                                if (players.isEmpty()) {
+                                    noplayers.setOpacity(1);
+                                } else {
+                                    noplayers.setOpacity(0);
+                                    for (int i = 0; i < players.size(); i++) {
+                                        onlinePlayers.getChildren().add(new OnlinePlayerListItem(players.get(i)));
+                                    }
+                                }
+                            });
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+               th.start();
+        refresh.setOnMouseClicked(event -> {
+            Platform.runLater(()->{
+                Vector<Player> players = RequestHandler.getPlayerList();
+                noplayers.setOpacity(0);
+                for (int i = 0; i < players.size(); i++) {
+                    onlinePlayers.getChildren().add(new OnlinePlayerListItem(players.get(i)));
                 }
+            });
 
         });
     }
-
 }

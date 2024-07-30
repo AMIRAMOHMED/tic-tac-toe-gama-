@@ -42,8 +42,6 @@ public class SetIPController {
         String ipAddress = ipAddressField.getText();
       Client.init(ipAddress,5005);
       Client client = Client.getInstance();
-        RegisterController.client=client;
-        LoginController.client=client;
 
 
         if (client.isConnected()) {

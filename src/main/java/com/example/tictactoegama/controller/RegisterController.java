@@ -8,14 +8,16 @@ import java.net.Socket;
 import com.example.tictactoegama.Api.ClientHandler;
 import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.models.User;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 
+import javafx.stage.Stage;
 import org.json.JSONObject;
 
 import com.example.tictactoegama.Api.Client;
@@ -36,20 +38,11 @@ public class RegisterController {
     private TextField userNametxt;
     @FXML
     private DatePicker birthDatetxt;
-    @FXML
-    private Button registerBtn;
-    @FXML
-    private Button loginBtn;
-
-    static  Client client;
-
-//   static public void setClient() {
-//
-//    }
-
+    private ActionEvent event;
 
     @FXML
     private void handleRegister(ActionEvent event) {
+        this.event=event;
         String email = emailtxt.getText();
         String password = passwordtxt.getText();
         String confirmPassword = confirmPasswordtxt.getText();
@@ -66,17 +59,28 @@ public class RegisterController {
             showAlert("Error", "Passwords do not match.");
             return;
         }
-
         User player = new User(userId, username, email, password);
         String playerJson = player.toString(); // Convert Player object to JSON string
-
         System.out.println("Player JSON: " + playerJson); // Log the JSON string
         ClientHandler.send("{\"RequestType\":\"Register\" ,\"User\":"+ playerJson+"}");
-            String resulr= null;
-            resulr = RequestHandler.getResponse();
-            System.out.println(resulr); // Log the request JSON
-            System.out.println("Data sent to server successfully."); // Log success message
-
+    }
+    @FXML
+    private void handleLoginButton(ActionEvent event){
+        this.event = event;
+            goToLoginPage();
+    }
+    public void goToLoginPage(){
+        Platform.runLater(()->{
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/Login.fxml"));
+                Scene registerScene = new Scene(root);
+                stage.setScene(registerScene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);

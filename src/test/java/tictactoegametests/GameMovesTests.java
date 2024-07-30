@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.tictactoegama.Api.Client;
+import com.example.tictactoegama.Api.ClientHandler;
 import org.junit.jupiter.api.Test;
 
 import com.example.tictactoegama.models.GameMoves;
@@ -30,5 +32,10 @@ public class GameMovesTests {
         List<Integer> emoves = new ArrayList<Integer>();
         for(int i =0;i<9;i++) emoves.add(i);
         assertEquals(gameMoves.getMoves(), emoves);
+    }
+    @Test
+    public void PlayListTest(){
+        Client.init("localhost",5005);
+        ClientHandler.send("{\"RequestType\":\"PlayerList\"}");
     }
 }

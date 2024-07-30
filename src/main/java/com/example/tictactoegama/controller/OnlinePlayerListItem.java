@@ -4,6 +4,9 @@ import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.Api.ClientHandler;
 import com.example.tictactoegama.Api.RequestHandler;
 import com.example.tictactoegama.logic.OnlineGamePlay;
+import com.example.tictactoegama.models.Player;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -27,13 +30,8 @@ public class OnlinePlayerListItem extends AnchorPane{
     protected final SVGPath sVGPath;
     protected final Text text0;
     protected final Button inviteButton;
-    private Client client;
-    public OnlinePlayerListItem(String playerName, boolean status , int userid){
-        try {
-            client = Client.getInstance();
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        }
+    private static ActionEvent event;
+    public OnlinePlayerListItem(Player player){
         text = new Text();
         sVGPath = new SVGPath();
         text0 = new Text();
@@ -50,11 +48,11 @@ public class OnlinePlayerListItem extends AnchorPane{
         text.setLayoutY(20.0);
         text.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text.setStrokeWidth(0.0);
-        text.setText(playerName);
+        text.setText(player.getUsername());
         text.setFont(new Font("Segoe UI", 16.0));
 
         sVGPath.setContent("M7.8 10a2.2 2.2 0 0 0 4.4 0 2.2 2.2 0 0 0-4.4 0z");
-        sVGPath.setFill(javafx.scene.paint.Color.valueOf(status ? "#FF827E" :"#00c096" ));
+        sVGPath.setFill(javafx.scene.paint.Color.valueOf(player.isIsingame() ? "#FF827E" :"#00c096" ));
         sVGPath.setLayoutX(6.0);
         sVGPath.setLayoutY(25.0);
 
@@ -62,7 +60,7 @@ public class OnlinePlayerListItem extends AnchorPane{
         text0.setLayoutY(40.0);
         text0.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         text0.setStrokeWidth(0.0);
-        text0.setText(status ? "ingame" : "online");
+        text0.setText(player.isIsingame() ? "ingame" : "online");
 
         inviteButton.setLayoutX(570.0);
         inviteButton.setLayoutY(13.0);
@@ -72,42 +70,33 @@ public class OnlinePlayerListItem extends AnchorPane{
         inviteButton.setStyle("-fx-border-color: #000000;");
         inviteButton.setBackground(Background.EMPTY);
         inviteButton.setText("invite");
-        inviteButton.setOnAction(
-                event ->new Thread( new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ClientHandler.send( "{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+userid+"}");
-                            String msg;
-                            while ((msg = RequestHandler.getResponse()) != null) {
-                                JSONObject object = new JSONObject(msg);
-                                boolean accepted = object.getBoolean("accepted");
-                                if (accepted) {
-                                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
-                                    Parent gamePageParent = loader.load();
+        inviteButton.setOnAction((event)->{
+            this.event=event;
+            ClientHandler.send( "{\"RequestType\":\"RequestGame\",\"userid\":"+Client.userid+",\"opponentid\":"+player.getUserid()+"}");
+            Platform.runLater(()-> inviteButton.setText(". . ."));
+            }
 
-                                    GameController gameController = loader.getController();
-                                    gameController.setAiMoodOption(new OnlineGamePlay());
-
-                                    Scene gamePageScene = new Scene(gamePageParent);
-                                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                                    window.setScene(gamePageScene);
-                                    window.show();
-                                } else {
-                                    inviteButton.setText("Denied");
-                                    inviteButton.setStyle("-fx-background-color: #FF827E");
-                                }
-                            }
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-                }).start()
         );
         getChildren().add(text);
         getChildren().add(sVGPath);
         getChildren().add(text0);
         getChildren().add(inviteButton);
+
+    }
+    public static void gotoGame(){
+        FXMLLoader loader = new FXMLLoader(OnlinePlayerListItem.class.getResource("/com/example/tictactoegama/views/gama-page.fxml"));
+        try {
+            Parent gamePageParent = loader.load();
+            GameController gameController = loader.getController();
+            gameController.setAiMoodOption(new OnlineGamePlay());
+
+            Scene gamePageScene = new Scene(gamePageParent);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(gamePageScene);
+            window.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }
