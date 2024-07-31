@@ -56,4 +56,12 @@ public class LevelController {
             e.printStackTrace();
         }
     }
+    @FXML
+    public void goToHistory(ActionEvent event) throws IOException {
+        Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/HistoryPage.fxml"));
+        Scene optionPageScene = new Scene(optionPageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(optionPageScene);
+        window.show();
+    }
 }

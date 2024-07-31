@@ -217,12 +217,13 @@ public class GameController {
 
     private void endGame(String winner) {
 
-String videoPath ="";
+        String videoPath ="";
         if (winner.equals(currentPlayer)) {
             videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
-
+            gameMoves.setWin(true);
         } else if (winner.equals(computerSymbol)) {
             videoPath ="src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
+            gameMoves.setWin(false);
         } else if (winner.equals("draw")) {
             videoPath =
             "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
