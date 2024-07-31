@@ -43,8 +43,6 @@ public class RequestHandler {
             case RequestGameResponse:
                 getRequestGameResponse(object);
                 break;
-            case PlayAgain:
-                break;
             case Surrender:
                 break;
             case PlayerList :
@@ -70,6 +68,8 @@ public class RequestHandler {
                 break;
         };
     }
+
+
     public static boolean getGameEnded(){
         return isgameended;
     }
@@ -156,7 +156,11 @@ public class RequestHandler {
                 System.out.println(opponent);
                 System.out.println(Client.user);
                 System.out.println("---------------");
-                    OnlineGameController.setPlayers(object.getBoolean("flag"), Client.user , opponent);
+                boolean flag = object.getBoolean("flag");
+                if (flag)
+                    OnlineGameController.setPlayers(flag, Client.user , opponent);
+                else
+                    OnlineGameController.setPlayers(flag, opponent , Client.user);
                 window.show();
             } catch (IOException e) {
                 e.printStackTrace();

@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.json.JSONObject;
@@ -32,21 +33,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class OnlineGameController implements Initializable {
-    public static OnlineGameController onlineGameController;
-
-    public OnlineGameController(){
-        onlineGameController = this;
-    }
     private static boolean flag;
     @FXML
+    Button replayBtn;
+    @FXML
     private Text gameStatus;
-
     @FXML
     private GridPane gameGrid;
     @FXML
     private static String currentPlayer;
-    @FXML
-    Button replayBtn;
     @FXML
     private Line winnerLine;
     @FXML
@@ -66,23 +61,27 @@ public class OnlineGameController implements Initializable {
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
     private static Player user;
-    private static Player opponent;
+    public static Player opponent;
     Thread th;
 
     private BufferedReader input;
     public synchronized static void setPlayers(boolean flag,Player user, Player opponent){
-        OnlineGameController.user = user;
-        OnlineGameController.opponent = opponent;
-        playerOscore = ""+ opponent.getScore();
-        playerXscore= "" + user.getScore();
-        playerx = user.getUsername();
-        playero = opponent.getUsername();
         OnlineGameController.flag = !flag;
         if (OnlineGameController.flag) {
+            OnlineGameController.opponent = user;
+            playerOscore = ""+ user.getScore();
+            playerXscore= "" + opponent.getScore();
+            playerx = opponent.getUsername();
+            playero = user.getUsername();
             currentPlayer = "O";
             opponentSymbol = "X";
         }
         else {
+            OnlineGameController.opponent = opponent;
+            playerOscore = ""+ opponent.getScore();
+            playerXscore= "" + user.getScore();
+            playerx = user.getUsername();
+            playero = opponent.getUsername();
             currentPlayer = "X";
             opponentSymbol = "O";
         }
@@ -104,7 +103,8 @@ public class OnlineGameController implements Initializable {
         OScoreLabel.setText(playerOscore);
         playerONametxt.setText(playero);
         gameStatus.setText(playerx);
-        if(!flag){
+        if(flag){
+            gameStatus.setText(playero);
             disableButtons();
             System.out.println("not my turn");
             processComputerMove();
@@ -125,41 +125,13 @@ public class OnlineGameController implements Initializable {
             int col = GridPane.getColumnIndex(clickedButton);
             try {
                 processPlayerMove(clickedButton, row, col);
-                if (!gameEnded) {
-                    System.out.println("played move and listening");
-                    processComputerMove();
-                    if (gameEnded){
-                        Platform.runLater(()->disableButtons());
-                    }
-                }
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
+
         }
     }
 
-
-    @FXML
-    public void handleGoBack(ActionEvent event) throws IOException {
-
-        Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
-        Scene optionPageScene = new Scene(optionPageParent);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(optionPageScene);
-        window.show();
-    }
-
-    @FXML
-    public void handleReplay(ActionEvent event) throws IOException {
-        if (gameEnded){
-            Platform.runLater(()->disableButtons());
-        }
-        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
-        Scene gamePageScene = new Scene(gamePageParent);
-        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        window.setScene(gamePageScene);
-        window.show();
-    }
     private void processPlayerMove(Button clickedButton, int row, int col) throws IOException {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
@@ -176,7 +148,12 @@ public class OnlineGameController implements Initializable {
         if (flag == 0) {
             endGame("draw");
         }
+        if (!gameEnded) {
+            gameStatus.setText(playero);
+            processComputerMove();
+        }
     }
+
     private void processComputerMove() {
             th = new Thread(()->{
                 int i;
@@ -191,21 +168,24 @@ public class OnlineGameController implements Initializable {
                 } else if (flag == 10) {
                     endGame(currentPlayer);
                 }
-        Platform.runLater(()-> {
-            updateBoardUI();
-            enableButtons();
-        });
-            });
-            th.start();
-            if(!th.isInterrupted()){
-                RequestHandler.index = -1;
-                th.resume();
+                updateBoardUI();
+                if (!gameEnded) {
+                    Platform.runLater(() -> {
+                        enableButtons();
+                        gameStatus.setText(playerx);
+                    });
+                }
                 if (gameEnded){
-                    Platform.runLater(()->disableButtons());
                     th.stop();
                 }
+            });
+            th.start();
+            if(!th.isInterrupted() && !gameEnded){
+                RequestHandler.index = -1;
+                th.resume();
             }
     }
+
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
             button.setStyle(
@@ -242,7 +222,6 @@ public class OnlineGameController implements Initializable {
         });
     }
 
-
     private void endGame(String winner) {
         ClientHandler.send("{\"RequestType\":\"GameEnded\",\"Player\":"+opponent+"}");
             String videoPath = "";
@@ -272,7 +251,6 @@ public class OnlineGameController implements Initializable {
             delay.play();
     }
 
-
     private void disableButtons() {
         Platform.runLater(() -> {
             for (Node node : gameGrid.getChildren()) {
@@ -292,7 +270,6 @@ public class OnlineGameController implements Initializable {
             }
         });
     }
-
 
     private void drawWinnerLine(int[][] winningTiles) {
         if (winningTiles == null || winningTiles.length == 0) return;
@@ -319,6 +296,7 @@ public class OnlineGameController implements Initializable {
             winnerLine.setVisible(true);
         }
     }
+
     private Node getNodeByRowColumnIndex(final int row, final int column) {
         for (Node node : gameGrid.getChildren()) {
             if (GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) == row &&
@@ -327,5 +305,30 @@ public class OnlineGameController implements Initializable {
             }
         }
         return null;
+    }
+
+    @FXML
+    public void handleReplay(ActionEvent event) throws IOException {
+        ClientHandler.send("{\"RequestType\":\"RequestGame\",\"userid\":"+Client.user.getUserid()+",\"opponentid\":"+OnlineGameController.opponent.getUserid()+"}");
+        replayBtn.setDisable(true);
+    }
+
+    @FXML
+    public void handleGoBack(ActionEvent event) throws IOException {
+        if (!gameEnded){
+            Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/surrender.fxml"));
+            Scene optionPageScene = new Scene(optionPageParent);
+            Stage window = new Stage();
+            window.setScene(optionPageScene);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.show();
+        }
+        else {
+            Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
+            Scene optionPageScene = new Scene(optionPageParent);
+            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            window.setScene(optionPageScene);
+            window.show();
+        }
     }
 }

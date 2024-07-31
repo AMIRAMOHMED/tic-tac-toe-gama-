@@ -32,9 +32,9 @@ public class TicTacToeGama extends Application {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                if (ListOfAvailablePlayersController.th != null && ListOfAvailablePlayersController.th.isAlive()){
-                    ListOfAvailablePlayersController.th.stop();
-                }
+            }
+            if (ListOfAvailablePlayersController.th != null && ListOfAvailablePlayersController.th.isAlive()){
+                ListOfAvailablePlayersController.th.stop();
             }
         });
     }

@@ -60,6 +60,13 @@ public class PlayBoard {
         return win;
     }
 
+    /**
+     * @param i index Position
+     * @param symbol Player Symbol
+     * @return -1 if none win, 0 if it was a draw, 1 if the last player win
+     * @since Add the Symbol to a position then checks if that symbol is in win
+     * condition
+     */
     public  int play(int i,char symbol){
         int x=0,y=0;
         x=i/3;
