@@ -58,6 +58,5 @@ public class GameMoves {
                 moves.add(movesarr.optInt(i));
             }
         }
-
     }
 }
