@@ -1,4 +1,6 @@
 package com.example.tictactoegama.logic;
+import org.json.JSONArray;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -11,15 +13,14 @@ public class FileHandler {
         }
         tempFile = new File(theDir.getAbsolutePath()+"\\gamehistory.txt");
     }
-    public String readFile() throws IOException{
+    public JSONArray readFile() throws IOException{
         FileReader file = new FileReader(tempFile);
         BufferedReader input = new BufferedReader(file);
-        String history="";
-        String newhistory;
-        while ((newhistory = input.readLine()) !=null){
-            newhistory += "\n"+ newhistory;
+        String line="";
+        JSONArray history = new JSONArray();
+        while ((line = input.readLine()) !=null){
+            history.put(line);
         }
-        System.out.println(newhistory);
         input.close();
         return history;
     }
