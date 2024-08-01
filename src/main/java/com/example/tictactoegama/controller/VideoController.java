@@ -41,18 +41,4 @@ public class VideoController implements Initializable {
         mediaPlayer.dispose();
     }
 
-    // private void handleWindowCloseRequest(WindowEvent event) {
-    //     // Stop media playback
-    //     if (mediaPlayer != null) {
-    //         mediaPlayer.stop();
-    //     }
-
-    //     // Prevent the default close operation
-    //     event.consume();
-
-    //     // Switch back to the previous scene
-    //     if (stage != null && previousScene != null) {
-    //         stage.setScene(previousScene);
-    //     }
-    // }
 }

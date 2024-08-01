@@ -85,6 +85,7 @@ public class Player {
     public void setLosses(int losses) {
         this.losses = losses;
     }
+    public int getScore() {return score;}
     public void setScore(){
         score = wins-losses;
     }
@@ -103,17 +104,19 @@ public class Player {
                 + losses + ", \"score\":" + score + "}";
     }
 
-    public void fromJson(String json){
-        JSONObject object = new JSONObject(json);
-        userid =  object.getInt("userid");
-        username = object.getString("username");
-        isloggedin = object.getBoolean("isloggedin");
-        isingame= object.getBoolean("isingame");
-        gamesplayed= object.getInt("gamesplayed");
-        wins= object.getInt("wins");
-        draws= object.getInt("draws");
-        losses=object.getInt("losses");
-        score= object.getInt("score");
+    public static Player fromJson(String json){
+        return Player.fromJson(new JSONObject(json));
+    }
+    public static Player fromJson(JSONObject object){
+        int userid =  object.getInt("userid");
+        String username = object.getString("username");
+        boolean isloggedin = object.getBoolean("isloggedin");
+        boolean isingame= object.getBoolean("isingame");
+        int gamesplayed= object.getInt("gamesplayed");
+        int wins= object.getInt("wins");
+        int draws= object.getInt("draws");
+        int losses=object.getInt("losses");
+        return new Player(userid,username,isloggedin,isingame,gamesplayed,wins,draws,losses);
     }
     
 }

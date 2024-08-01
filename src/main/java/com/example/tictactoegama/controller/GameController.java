@@ -1,6 +1,9 @@
 package com.example.tictactoegama.controller;
 
+import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.interfaces.AIMoodOption;
+import com.example.tictactoegama.logic.MediumMood;
+import com.example.tictactoegama.logic.OnlineGamePlay;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import com.example.tictactoegama.views.SymbolSelectionDialog;
@@ -21,12 +24,13 @@ import javafx.animation.PauseTransition;
 import javafx.scene.Node;
 import javafx.scene.shape.Line;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 
 
 
 public class GameController {
-
 
 
     @FXML
@@ -41,20 +45,16 @@ public class GameController {
     @FXML
     private Line winnerLine;
     @FXML
-    Label playerXNametxt,playerONametxt , OScoreLabel , XScoreLabel;
-    static int playerScore,computerScore;
+    Label playerXNametxt, playerONametxt, OScoreLabel, XScoreLabel;
+    static int playerScore, computerScore;
     static String globalPlayerSymbol;
-
     private Scene originalGameScene;
-    private  boolean isDraw;
-    boolean isLocal;
+    private boolean isDraw;
     private String computerSymbol;
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
-
     private static AIMoodOption aiMoodOption;
-
 
 
 
@@ -63,10 +63,10 @@ public class GameController {
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
-        if (globalPlayerSymbol!=null&&globalPlayerSymbol.equals("O")) {
+        if (globalPlayerSymbol != null && globalPlayerSymbol.equals("O")) {
             OScoreLabel.setText("" + playerScore);
             XScoreLabel.setText("" + computerScore);
-        }else{
+        } else {
             OScoreLabel.setText("" + computerScore);
             XScoreLabel.setText("" + playerScore);
         }
@@ -87,14 +87,14 @@ public class GameController {
     public void handleSymbolSelection(String playerSymbol, String compSymbol) {
         currentPlayer = playerSymbol;
         computerSymbol = compSymbol;
-        globalPlayerSymbol=playerSymbol;
+        globalPlayerSymbol = playerSymbol;
         gameStatus.setText("Current Player: " + currentPlayer);
         if (playerSymbol.equals("X")) {
             playerXNametxt.setText("Player X");
             playerONametxt.setText("Computer");
             OScoreLabel.setText("" + computerScore);
             XScoreLabel.setText("" + playerScore);
-        }else{
+        } else {
             playerXNametxt.setText("Computer");
             playerONametxt.setText("Player O");
             OScoreLabel.setText("" + playerScore);
@@ -104,14 +104,21 @@ public class GameController {
 
     @FXML
     private void handleButtonClick(ActionEvent event) {
-        if (gameEnded) {  disableButtons();}
+        if (gameEnded) {
+            disableButtons();
+        }
 
         Button clickedButton = (Button) event.getSource();
         if (clickedButton.getText().isEmpty()) {
             int row = GridPane.getRowIndex(clickedButton);
             int col = GridPane.getColumnIndex(clickedButton);
 
-            processPlayerMove(clickedButton, row, col);
+            try {
+                processPlayerMove(clickedButton, row, col);
+            } catch (IOException e) {
+                System.out.println("wtf");
+                throw new RuntimeException(e);
+            }
 
             if (!gameEnded) {
                 PauseTransition pause = new PauseTransition(Duration.seconds(0.1));
@@ -122,8 +129,8 @@ public class GameController {
     }
 
     public void handleGoBack(ActionEvent event) throws IOException {
-        computerScore=0;
-        playerScore=0;
+        computerScore = 0;
+        playerScore = 0;
         Parent optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/choose_level-view.fxml"));
         Scene optionPageScene = new Scene(optionPageParent);
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -132,10 +139,10 @@ public class GameController {
     }
 
     public void handleReplay(ActionEvent event) throws IOException {
-        if(currentPlayer==globalPlayerSymbol){
-            playerScore+=1;
+        if (currentPlayer == globalPlayerSymbol) {
+            playerScore += 1;
         } else {
-            computerScore+=1;
+            computerScore += 1;
         }
 
         Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/gama-page.fxml"));
@@ -152,26 +159,26 @@ public class GameController {
         }*/
     }
 
-    private void processPlayerMove(Button clickedButton, int row, int col) {
+    private void processPlayerMove(Button clickedButton, int row, int col) throws IOException {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
-        int flag = playBoard.play(row,col,currentPlayer.charAt(0));
-
-        if (flag== 1) {
+        int flag = playBoard.play(row, col, currentPlayer.charAt(0));
+        if (flag == 1) {
             endGame(currentPlayer);
         }
-        if (flag== 0) {
+        if (flag == 0) {
             endGame("draw");
         }
     }
 
     private void processComputerMove() {
-        int flag = aiMoodOption.makeMove(playBoard,computerSymbol.charAt(0));
-        if (flag==1) {
+        int flag = aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0));
+        if (flag == 1) {
             endGame(computerSymbol);
-        }
-        else if (flag==0){
+        } else if (flag == 0) {
             endGame("draw");
+        } else if (flag == 10) {
+            endGame(currentPlayer);
         }
         updateBoardUI();
     }
@@ -212,18 +219,17 @@ public class GameController {
     }
 
 
-
     private void endGame(String winner) {
 
-String videoPath ="";
+        String videoPath = "";
         if (winner.equals(currentPlayer)) {
             videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
 
         } else if (winner.equals(computerSymbol)) {
-            videoPath ="src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
+            videoPath = "src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
         } else if (winner.equals("draw")) {
             videoPath =
-            "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
+                    "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
         } else {
             return;
         }
@@ -241,7 +247,7 @@ String videoPath ="";
             Stage stage = new Stage();
             videoViewHandler.showVideoView(stage, finalVideoPath);
             stage.show();
-        } );
+        });
 
 
         delay.play();
@@ -294,43 +300,7 @@ String videoPath ="";
         }
         return null;
     }
-//    private void showVideoView(String videoPath) {
-//        try {
-//            // Store the original game scene
-//            originalGameScene = gameGrid.getScene();
-//
-//            // Load the video view
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/Video.fxml"));
-//            Parent videoRoot = loader.load();
-//            Stage stage = (Stage) gameGrid.getScene().getWindow();
-//            Scene videoScene = new Scene(videoRoot);
-//
-//            // Get the VideoController and set the stage, previous scene, and video path
-//            VideoController videoController = loader.getController();
-//            videoController.setStageAndPreviousScene(stage, originalGameScene);
-//            videoController.setVideoPath(videoPath);
-//
-//            // Set the video scene
-//            stage.setScene(videoScene);
-//
-//            // Pause for 10 seconds
-//            PauseTransition pause = new PauseTransition(Duration.seconds(10));
-//            pause.setOnFinished(event -> {
-//                // Switch back to the original game scene
-//                stage.setScene(originalGameScene);
-//            });
-//            pause.play();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace(); // Handle exceptions
-//        }
-    }
-
-
-
-
-
-
+}
 
 
 

@@ -32,7 +32,6 @@ public class LocalGameController {
     private Line winnerLine;
     @FXML
     Button replayBtn, goBackBtn;
-
     private boolean gameEnded;
     private PlayBoard playBoard;
     static int XScore,OScore;
