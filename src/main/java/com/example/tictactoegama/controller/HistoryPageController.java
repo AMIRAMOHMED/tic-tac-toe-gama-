@@ -8,10 +8,15 @@ package com.example.tictactoegama.controller;
 import com.example.tictactoegama.logic.FileHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -36,9 +41,12 @@ public class HistoryPageController implements Initializable {
     
     
     @FXML
-    private void handleBack(ActionEvent event) throws IOException {
-        
-     
+    private void handleGoBack(ActionEvent event) throws IOException {
+        Parent gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/options_page.fxml"));
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
     }
     @FXML
     private void handleDateBicker(ActionEvent event) throws IOException {
@@ -54,9 +62,8 @@ public class HistoryPageController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        String[] arr = data.split("\n");
 
-        for(int i =0; i<data.length() ; i+=2){
+        for(int i =0; i<data.length() ; i++){
             System.out.println(data.get(i));
             JSONObject jsonObject = new JSONObject(data.get(i).toString());
             System.out.println(jsonObject.toString());

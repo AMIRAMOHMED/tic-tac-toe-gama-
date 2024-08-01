@@ -148,13 +148,7 @@ public class GameController {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gamePageScene);
         window.show();
-        /*if (globalPlayerSymbol!=null&&globalPlayerSymbol.equals("O")) {
-            OScoreLabel.setText("" + playerScore);
-            XScoreLabel.setText("" + computerScore);
-        }else{
-            OScoreLabel.setText("" + computerScore);
-            XScoreLabel.setText("" + playerScore);
-        }*/
+
     }
 
     private void processPlayerMove(Button clickedButton, int row, int col) {
@@ -303,36 +297,7 @@ public class GameController {
         }
         return null;
     }
-//    private void showVideoView(String videoPath) {
-//        try {
-//            // Store the original game scene
-//            originalGameScene = gameGrid.getScene();
-//
-//            // Load the video view
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/tictactoegama/views/Video.fxml"));
-//            Parent videoRoot = loader.load();
-//            Stage stage = (Stage) gameGrid.getScene().getWindow();
-//            Scene videoScene = new Scene(videoRoot);
-//
-//            // Get the VideoController and set the stage, previous scene, and video path
-//            VideoController videoController = loader.getController();
-//            videoController.setStageAndPreviousScene(stage, originalGameScene);
-//            videoController.setVideoPath(videoPath);
-//
-//            // Set the video scene
-//            stage.setScene(videoScene);
-//
-//            // Pause for 10 seconds
-//            PauseTransition pause = new PauseTransition(Duration.seconds(10));
-//            pause.setOnFinished(event -> {
-//                // Switch back to the original game scene
-//                stage.setScene(originalGameScene);
-//            });
-//            pause.play();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace(); // Handle exceptions
-//        }
+
     }
 
 
