@@ -11,10 +11,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Vector;
 
 import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.Api.ClientHandler;
 import com.example.tictactoegama.Api.RequestHandler;
+import com.example.tictactoegama.models.Player;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
@@ -37,14 +40,12 @@ public class Scoreboard implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
             ClientHandler.send( "{\"RequestType\":\"Scoreboard\"}");
-            JSONObject object = new JSONObject("RequestHandler.getResponse()");
-            JSONArray objarr = object.getJSONArray("Scoreboard");
-            if (!objarr.isEmpty()){
-                for (int i = 0 ; i< objarr.length();i++){
-                    JSONObject item = objarr.getJSONObject(i);
-                    nameList.getItems().add(new viewListIScoreboardBase(i+". "+ item.getString("username"), item.getInt("score")));
-                }
+        Platform.runLater(()->{
+            Vector<Player> players = RequestHandler.getScoreBoard();
+            for (int i = 0; i < players.size(); i++) {
+                nameList.getItems().add(new viewListIScoreboardBase(i+". "+ players.get(i).getUsername(), players.get(i).getScore()));
             }
+        });
     }    
     
     

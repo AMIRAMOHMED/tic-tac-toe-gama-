@@ -3,6 +3,7 @@ package com.example.tictactoegama.controller;
 import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.Api.ClientHandler;
 import com.example.tictactoegama.Api.RequestHandler;
+import com.example.tictactoegama.interfaces.EndGame;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.Player;
 import com.example.tictactoegama.models.VideoViewHandler;
@@ -32,7 +33,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class OnlineGameController implements Initializable {
+public class OnlineGameController implements Initializable, EndGame {
     private static boolean flag;
     @FXML
     Button replayBtn;
@@ -40,8 +41,7 @@ public class OnlineGameController implements Initializable {
     private Text gameStatus;
     @FXML
     private GridPane gameGrid;
-    @FXML
-    private static String currentPlayer;
+    public static String currentPlayer;
     @FXML
     private Line winnerLine;
     @FXML
@@ -60,11 +60,9 @@ public class OnlineGameController implements Initializable {
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
-    private static Player user;
     public static Player opponent;
     Thread th;
 
-    private BufferedReader input;
     public synchronized static void setPlayers(boolean flag,Player user, Player opponent){
         OnlineGameController.flag = !flag;
         if (OnlineGameController.flag) {
@@ -89,11 +87,6 @@ public class OnlineGameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            input = new BufferedReader(new InputStreamReader(ClientHandler.socket.getInputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         playBoard = new PlayBoard();
         gameEnded = false;
         videoViewHandler = new VideoViewHandler();
@@ -111,7 +104,6 @@ public class OnlineGameController implements Initializable {
             System.out.println("listening");
         }
         });
-
     }
 
     @FXML
@@ -222,7 +214,7 @@ public class OnlineGameController implements Initializable {
         });
     }
 
-    private void endGame(String winner) {
+    public void endGame(String winner) {
         ClientHandler.send("{\"RequestType\":\"GameEnded\",\"Player\":"+opponent+"}");
             String videoPath = "";
             if (winner.equals(currentPlayer)) {
@@ -238,8 +230,6 @@ public class OnlineGameController implements Initializable {
             }
             disableButtons();
             gameEnded = true;
-            drawWinnerLine(playBoard.getWinningTiles());
-            winnerLine.setVisible(true);
             replayBtn.setVisible(true);
             final String finalVideoPath = videoPath;
             PauseTransition delay = new PauseTransition(Duration.seconds(1));
@@ -249,6 +239,10 @@ public class OnlineGameController implements Initializable {
                 stage.show();
             });
             delay.play();
+            if (playBoard.getWinningTiles() != null ) {
+                drawWinnerLine(playBoard.getWinningTiles());
+                winnerLine.setVisible(true);
+            }
     }
 
     private void disableButtons() {

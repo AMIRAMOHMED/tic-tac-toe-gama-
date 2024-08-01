@@ -20,21 +20,21 @@ public class Surrender implements Initializable {
     Button leaveButton;
     @FXML
     Button continueButton;
-
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         leaveButton.setOnAction(event -> {
-            ClientHandler.send("{\"RequestType\":\"Surrender\",\"opponent\":"+OnlineGameController.opponent);
+            ClientHandler.send("{\"RequestType\":\"Surrender\",\"opponent\":"+OnlineGameController.opponent+"}");
             Parent optionPageParent = null;
             try {
                 optionPageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
             Scene optionPageScene = new Scene(optionPageParent);
             Stage window = TicTacToeGama.getStage();
             window.setScene(optionPageScene);
+            Stage dialog = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            dialog.close();
             window.show();
         });
         continueButton.setOnAction(event -> {
@@ -42,5 +42,4 @@ public class Surrender implements Initializable {
             window.close();
         });
     }
-
 }

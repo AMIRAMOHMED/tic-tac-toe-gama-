@@ -3,6 +3,7 @@ package com.example.tictactoegama.Api;
 import com.example.tictactoegama.TicTacToeGama;
 import com.example.tictactoegama.constants.RequestType;
 import com.example.tictactoegama.controller.*;
+import com.example.tictactoegama.interfaces.EndGame;
 import com.example.tictactoegama.models.Player;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -20,8 +21,8 @@ import java.util.Vector;
 public class RequestHandler {
     private static boolean isgameended = false;
     public static int index = -1;
+    private static Vector<Player> scoreboard;
     private static Vector<Player> playerList;
-    private static Vector<Player> opponentList = new Vector<>();
     private static HashMap<RequestType, Long> lastUpdate = new HashMap<>();
     public static void getResponse(String response){
         JSONObject object = new JSONObject(response);
@@ -44,6 +45,7 @@ public class RequestHandler {
                 getRequestGameResponse(object);
                 break;
             case Surrender:
+                surrendered();
                 break;
             case PlayerList :
                 try {
@@ -58,6 +60,16 @@ public class RequestHandler {
                 }
                 break;
             case Scoreboard:
+                try {
+                    scoreboard = new Vector<>();
+                    JSONArray list = object.getJSONArray("Scoreboard");
+                    for (int i = 0; i<list.length();i++){
+                        scoreboard.add(Player.fromJson(list.getJSONObject(i)));
+                    }
+                    System.out.println(scoreboard);
+                } catch (Exception e ){
+                    e.printStackTrace();
+                }
                 break;
             case GameHistory:
                 break;
@@ -67,6 +79,23 @@ public class RequestHandler {
                 setGameEnded(true);
                 break;
         };
+    }
+    private static void surrendered(){
+        Platform.runLater(()->{
+        Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your Opponent has surrendred");
+        alert.show();
+        alert.setOnCloseRequest((event)->{
+            Parent optionPageParent = null;
+            try {
+                optionPageParent = FXMLLoader.load(RequestHandler.class.getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Scene optionPageScene = new Scene(optionPageParent);
+        Stage window = TicTacToeGama.getStage();
+        window.setScene(optionPageScene);
+        });
+        });
     }
 
 
@@ -166,6 +195,10 @@ public class RequestHandler {
                 e.printStackTrace();
             }
         });
+    }
+
+    public static Vector<Player> getScoreBoard(){
+        return scoreboard;
     }
 
 }

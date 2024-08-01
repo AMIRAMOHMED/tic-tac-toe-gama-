@@ -40,19 +40,6 @@ public class ClientHandler{
             closeReader();
             closeSender();
             socket.close();
-            Platform.runLater(()->{
-            FXMLLoader loader = new FXMLLoader(RequestHandler.class.getResource("/com/example/tictactoegama/views/hello-view.fxml"));
-                Parent gamePageParent = null;
-                try {
-                    gamePageParent = loader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                Scene gamePageScene = new Scene(gamePageParent);
-            Stage window = TicTacToeGama.getStage();
-            window.setScene(gamePageScene);
-            window.show();
-            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,6 +56,19 @@ public class ClientHandler{
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
+                    Platform.runLater(()->{
+                        FXMLLoader loader = new FXMLLoader(RequestHandler.class.getResource("/com/example/tictactoegama/views/hello-view.fxml"));
+                        Parent gamePageParent = null;
+                        try {
+                            gamePageParent = loader.load();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        Scene gamePageScene = new Scene(gamePageParent);
+                        Stage window = TicTacToeGama.getStage();
+                        window.setScene(gamePageScene);
+                        window.show();
+                    });
                 }
                 disconnect();
             }

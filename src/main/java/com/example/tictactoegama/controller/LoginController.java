@@ -67,7 +67,7 @@ public class LoginController {
     }
     public void getHomePage() throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/ListOfAvailablePlayers.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/OnlineHomeScreen.fxml"));
         Scene registerScene = new Scene(root);
         stage.setScene(registerScene);
         stage.show();
