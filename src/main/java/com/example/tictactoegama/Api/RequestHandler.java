@@ -78,8 +78,18 @@ public class RequestHandler {
             case GameEnded:
                 setGameEnded(true);
                 break;
+            case getPlayer:
+                Client.user = Player.fromJson(object.getJSONObject("Player"));
+            case ServerShutDown:
+                ServerShutDown();
+                break;
         };
     }
+
+    private static void ServerShutDown() {
+        showAlert("Server ShutDown", "We are Sorry The server has been shut down");
+    }
+
     private static void surrendered(){
         Platform.runLater(()->{
         Alert alert = new Alert(Alert.AlertType.INFORMATION,"Your Opponent has surrendred");

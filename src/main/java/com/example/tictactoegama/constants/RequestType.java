@@ -13,4 +13,6 @@ public enum RequestType {
     RequestGameResponse,
     Ignore,
     GameEnded,
+    getPlayer,
+    ServerShutDown,
 }

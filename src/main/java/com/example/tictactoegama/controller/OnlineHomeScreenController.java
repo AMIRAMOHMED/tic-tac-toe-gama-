@@ -36,6 +36,7 @@ public class OnlineHomeScreenController implements Initializable {
     SVGPath listofplayers;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        ClientHandler.send("{\"RequestType\":\"getPlayer\",\"userid\":"+Client.user.getUserid()+"}");
         name.setText(Client.user.getUsername());
         wins.setText(""+Client.user.getWins());
         losses.setText(""+Client.user.getLosses());
