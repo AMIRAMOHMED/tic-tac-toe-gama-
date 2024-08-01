@@ -1,9 +1,17 @@
 package com.example.tictactoegama.controller;
 
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import org.json.JSONArray;
+
+import java.io.IOException;
 
 public class viewListIHistoryBase extends AnchorPane {
 
@@ -11,9 +19,11 @@ public class viewListIHistoryBase extends AnchorPane {
     protected final Label winLoseLable;
     protected final Label label;
     protected final Button viewGameBtn;
+    JSONArray moves;
     
-    public viewListIHistoryBase(String playerName ,String date, int winOrLose ) {
+    public viewListIHistoryBase(String playerName , String date, int winOrLose , JSONArray moves) {
 
+        this.moves = moves;
         playerNameLable = new Label();
         winLoseLable = new Label();
         label = new Label();
@@ -65,6 +75,16 @@ public class viewListIHistoryBase extends AnchorPane {
         
     }
     public void handleViewGame(ActionEvent event){
-            
+        new GameReplayUIController(moves);
+        Parent gamePageParent = null;
+        try {
+            gamePageParent = FXMLLoader.load(getClass().getResource("/com/example/tictactoegama/views/gamereplayui.fxml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene gamePageScene = new Scene(gamePageParent);
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setScene(gamePageScene);
+        window.show();
     }
 }

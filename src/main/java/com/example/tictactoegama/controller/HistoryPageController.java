@@ -69,9 +69,9 @@ public class HistoryPageController implements Initializable {
             System.out.println(jsonObject.toString());
             String player1=jsonObject.getString("player1");
             String player2=jsonObject.getString("player2");
-            String winStatus="1";
+            JSONArray moves = jsonObject.getJSONArray("moves");
 
-            historyList.getItems().add(new viewListIHistoryBase(player1,player2 ,jsonObject.getInt("win")));
+            historyList.getItems().add(new viewListIHistoryBase(player1,player2 ,jsonObject.getInt("win"),moves));
         }
     }    
     
