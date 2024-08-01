@@ -8,7 +8,7 @@ public class GameMoves {
     private String player1;
     private String player2;
     private ArrayList<Integer> moves;
-    private boolean win;
+    private int win;
     public GameMoves() {
         moves = new ArrayList<Integer>();
     }
@@ -35,18 +35,18 @@ public class GameMoves {
     public void setMoves(ArrayList<Integer> moves) {
         this.moves = moves;
     }
-    public boolean isWin() {
+    public int getWin() {
         return win;
     }
 
-    public void setWin(boolean win) {
+    public void setWin(int win) {
         this.win = win;
     }
     
 
     @Override
     public String toString() {
-        return "{\"player1\":\"" + player1 + "\", \"player2\":\"" + player2 + "\", \"win\": \"moves\":" + moves + "}";
+        return "{\"player1\":\"" + player1 + "\", \"player2\":\"" + player2 + "\", \"win\":"+win+",\"moves\":" + moves + "}";
     }
     public void toGameMoves(String query){
         JSONObject object = new JSONObject(query);
