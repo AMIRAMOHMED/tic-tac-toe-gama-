@@ -1,5 +1,6 @@
 package com.example.tictactoegama.controller;
 
+import com.example.tictactoegama.models.GameMoves;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import javafx.animation.PauseTransition;
@@ -15,10 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class LocalGameController {
 
@@ -32,6 +35,7 @@ public class LocalGameController {
     private Line winnerLine;
     @FXML
     Button replayBtn, goBackBtn;
+    GameMoves gameMoves;
     private boolean gameEnded;
     private PlayBoard playBoard;
     static int XScore,OScore;
@@ -39,15 +43,19 @@ public class LocalGameController {
     private VideoViewHandler videoViewHandler;
     static String playerXName,playerOName;
     String currentPlayer;
-
+    ArrayList<Integer> moves;
 
     @FXML
     public void initialize() {
         playBoard = new PlayBoard();
         gameEnded = false;
+        gameMoves = new GameMoves();
+        moves = new ArrayList<Integer>();
         numberOfPlayes=0;
         playerXNametxt.setText(playerXName);
         playerONametxt.setText(playerOName);
+        gameMoves.setPlayer1(playerXName);
+        gameMoves.setPlayer2(playerOName);
         OScoreLabel.setText(""+OScore);
         XScoreLabel.setText(""+XScore);
         videoViewHandler = new VideoViewHandler();
@@ -64,6 +72,7 @@ public class LocalGameController {
                 gameStatus.setText(playerOName+"'s Turn");
                 currentPlayer=playerXName;
                 int flag = (playBoard.play(row, col,'x'));
+                moves.add((row*3+col));
                 if(flag==1){
 
                     endGame(currentPlayer);
@@ -76,6 +85,7 @@ public class LocalGameController {
                 gameStatus.setText(playerXName+"'s Turn");
                 currentPlayer=playerOName;
                 int flag = (playBoard.play(row, col,'o'));
+                moves.add((row*3+col));
                 if(flag==1){
                     endGame(currentPlayer);
                 }else if (flag==0)
@@ -114,11 +124,22 @@ public class LocalGameController {
         if (winner.equals("draw")) {  // Handle draw condition
             message = "It's a draw!";
             videoPath = "src/main/resources/com/example/tictactoegama/videos/video_draw2.mp4";
+            gameMoves.setWin(2);
         } else {  // Handle win condition
             message = "Player " + winner + " wins!";
             videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
+            if(winner.equals(playerXName)){
+                gameMoves.setWin(1);
+            } else {
+                gameMoves.setWin(0);
+            }
         }
-
+        Stage stage2 = new Stage();
+        gameMoves.setMoves(moves);
+        Scene scene = new Scene(new savehistoryrequestBase(stage2,gameMoves));
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.setScene(scene);
+        stage2.show();
         gameStatus.setText(message);
         disableButtons();
         gameEnded = true;
@@ -163,7 +184,12 @@ public class LocalGameController {
         } else if (currentPlayer==playerOName) {
             OScore+=1;
         }
-
+        Stage stage2 = new Stage();
+        gameMoves.setMoves(moves);
+        Scene scene = new Scene(new savehistoryrequestBase(stage2,gameMoves));
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.setScene(scene);
+        stage2.show();
         Parent gamePageParent = FXMLLoader.load(getClass().getResource(
                 "/com/example/tictactoegama/views/local-game-page.fxml"));
         Scene gamePageScene = new Scene(gamePageParent);

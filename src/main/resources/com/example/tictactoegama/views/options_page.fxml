@@ -56,5 +56,6 @@
                 </graphic>
             </Button>
         </VBox>
+      <Button layoutX="663.0" layoutY="36.0" mnemonicParsing="false" onAction="#goToHistory" style="-fx-background-color: #FFFFFF; -fx-font-size: 15; -fx-font-weight: bold; -fx-text-fill: #46a3ff;" text="Game History" />
     </children>
 </AnchorPane>

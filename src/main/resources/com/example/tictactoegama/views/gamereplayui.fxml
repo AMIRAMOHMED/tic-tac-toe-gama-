@@ -10,10 +10,10 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: X808080; " xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.controller.GameController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" style="-fx-background-color: X808080; " xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.tictactoegama.controller.GameReplayUIController">
     <children>
         <Text fx:id="gameStatus" layoutX="335.0" layoutY="57.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #000000;" text="Player Turn" />
-        <GridPane fx:id="gameGrid" hgap="10.0" layoutX="200.0" layoutY="86.0" prefHeight="500.0" prefWidth="400.0" vgap="10.0">
+        <GridPane fx:id="gameGrid" hgap="10.0" layoutX="200.0" layoutY="86.0" prefHeight="412.0" prefWidth="400.0" vgap="10.0">
             <children>
                 <Button fx:id="btn00" onAction="#handleButtonClick" prefHeight="133.0" prefWidth="133.0" style="-fx-font-size: 36px; -fx-background-color: #FEFEFE; -fx-border-color: #E3E3E3;" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <Button fx:id="btn01" onAction="#handleButtonClick" prefHeight="133.0" prefWidth="133.0" style="-fx-font-size: 36px; -fx-background-color: #FEFEFE; -fx-border-color: #E3E3E3;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
@@ -24,8 +24,6 @@
                 <Button fx:id="btn20" onAction="#handleButtonClick" prefHeight="133.0" prefWidth="133.0" style="-fx-font-size: 36px; -fx-background-color: #FEFEFE; -fx-border-color: #E3E3E3;" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                 <Button fx:id="btn21" onAction="#handleButtonClick" prefHeight="133.0" prefWidth="133.0" style="-fx-font-size: 36px; -fx-background-color: #FEFEFE; -fx-border-color: #E3E3E3;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                 <Button fx:id="btn22" onAction="#handleButtonClick" prefHeight="133.0" prefWidth="133.0" style="-fx-font-size: 36px; -fx-background-color: #FEFEFE; -fx-border-color: #E3E3E3;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <SVGPath content="M19 12l-18 12v-24l18 12zm4-11h-4v22h4v-22z" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <SVGPath content="M19 12l-18 12v-24l18 12zm4-11h-4v22h4v-22z" scaleX="-1.0" GridPane.rowIndex="3" />
             </children>
          <columnConstraints>
             <ColumnConstraints halignment="CENTER" />
@@ -36,7 +34,6 @@
             <RowConstraints />
             <RowConstraints />
             <RowConstraints />
-            <RowConstraints minHeight="50.0" prefHeight="60.0" valignment="CENTER" />
          </rowConstraints>
         </GridPane>
         <Line fx:id="winnerLine" stroke="000000" strokeWidth="5" visible="false">
@@ -44,5 +41,16 @@
                 <DropShadow color="#6e6e6e" radius="30" />
             </effect>
         </Line>
+      <Button layoutX="496.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleMoveOn" prefHeight="86.0" prefWidth="78.0" style="-fx-background-color: #FFFFFF;">
+         <graphic>
+            <SVGPath content="M19 12l-18 12v-24l18 12zm4-11h-4v22h4v-22z" fill="#46a3ff" />
+         </graphic>
+      </Button>
+      <Button layoutX="224.0" layoutY="506.0" mnemonicParsing="false" onAction="#handleMoveBack" prefHeight="86.0" prefWidth="78.0" style="-fx-background-color: #FFFFFF;">
+         <graphic>
+            <SVGPath content="M19 12l-18 12v-24l18 12zm4-11h-4v22h4v-22z" fill="#46a3ff" scaleX="-1.0" />
+         </graphic>
+      </Button>
+      <Button fx:id="goBackBtn" layoutX="18.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleGoBack" prefHeight="46.0" prefWidth="86.0" style="-fx-background-color: #FFFFFF; -fx-text-fill: #000000; -fx-border-color: #000000; -fx-border-radius: 5; -fx-font-family: &quot;Roboto&quot;, sans-serif; -fx-font-weight: 400; -fx-font-size: 20;" text="&lt;" />
     </children>
 </AnchorPane>

@@ -2,8 +2,7 @@ package com.example.tictactoegama.controller;
 
 import com.example.tictactoegama.Api.Client;
 import com.example.tictactoegama.interfaces.AIMoodOption;
-import com.example.tictactoegama.logic.MediumMood;
-import com.example.tictactoegama.logic.OnlineGamePlay;
+import com.example.tictactoegama.models.GameMoves;
 import com.example.tictactoegama.models.PlayBoard;
 import com.example.tictactoegama.models.VideoViewHandler;
 import com.example.tictactoegama.views.SymbolSelectionDialog;
@@ -18,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.animation.PauseTransition;
@@ -27,7 +27,7 @@ import javafx.scene.shape.Line;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-
+import java.util.ArrayList;
 
 
 public class GameController {
@@ -54,12 +54,17 @@ public class GameController {
     private PlayBoard playBoard;
     private boolean gameEnded;
     private VideoViewHandler videoViewHandler;
+    private GameMoves gameMoves;
     private static AIMoodOption aiMoodOption;
-
+    ArrayList<Integer> moves;
 
 
     @FXML
     public void initialize() {
+        gameMoves = new GameMoves();
+        gameMoves.setPlayer1("You");
+        gameMoves.setPlayer2("Ai");
+        moves = new ArrayList<Integer>();
         Platform.runLater(this::showSymbolSelectionDialog);
         playBoard = new PlayBoard();
         gameEnded = false;
@@ -71,7 +76,6 @@ public class GameController {
             XScoreLabel.setText("" + playerScore);
         }
         videoViewHandler = new VideoViewHandler();
-
     }
 
     public void setAiMoodOption(AIMoodOption aiMoodOption) {
@@ -150,30 +154,24 @@ public class GameController {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.setScene(gamePageScene);
         window.show();
-        /*if (globalPlayerSymbol!=null&&globalPlayerSymbol.equals("O")) {
-            OScoreLabel.setText("" + playerScore);
-            XScoreLabel.setText("" + computerScore);
-        }else{
-            OScoreLabel.setText("" + computerScore);
-            XScoreLabel.setText("" + playerScore);
-        }*/
+
     }
 
     private void processPlayerMove(Button clickedButton, int row, int col) throws IOException {
         clickedButton.setText(currentPlayer);
         updateButtonStyle(clickedButton, currentPlayer);
-        int flag = playBoard.play(row, col, currentPlayer.charAt(0));
-        if (flag == 1) {
+        int flag = playBoard.play(row,col,currentPlayer.charAt(0));
+        moves.add((row*3+col));
+        if (flag== 1) {
             endGame(currentPlayer);
         }
         if (flag == 0) {
             endGame("draw");
         }
     }
-
     private void processComputerMove() {
-        int flag = aiMoodOption.makeMove(playBoard, computerSymbol.charAt(0));
-        if (flag == 1) {
+        int flag = aiMoodOption.makeMove(playBoard,computerSymbol.charAt(0),moves);
+        if (flag==1) {
             endGame(computerSymbol);
         } else if (flag == 0) {
             endGame("draw");
@@ -182,8 +180,6 @@ public class GameController {
         }
         updateBoardUI();
     }
-
-
     private void updateButtonStyle(Button button, String symbol) {
         if ("X".equals(symbol)) {
             button.setStyle(
@@ -221,20 +217,27 @@ public class GameController {
 
     private void endGame(String winner) {
 
-        String videoPath = "";
+        String videoPath ="";
         if (winner.equals(currentPlayer)) {
             videoPath = "src/main/resources/com/example/tictactoegama/videos/video_win.mp4";
-
+            gameMoves.setWin(1);
         } else if (winner.equals(computerSymbol)) {
-            videoPath = "src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
+            videoPath ="src/main/resources/com/example/tictactoegama/videos/video_fail.mp4";
+            gameMoves.setWin(0);
         } else if (winner.equals("draw")) {
             videoPath =
-                    "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
+            "src/main/resources/com/example/tictactoegama/videos/video_draw1.mp4";
+            gameMoves.setWin(2);
         } else {
             return;
         }
 
-
+        Stage stage2 = new Stage();
+        gameMoves.setMoves(moves);
+        Scene scene = new Scene(new savehistoryrequestBase(stage2,gameMoves));
+        stage2.initModality(Modality.APPLICATION_MODAL);
+        stage2.setScene(scene);
+        stage2.show();
         disableButtons();
         gameEnded = true;
         drawWinnerLine(playBoard.getWinningTiles());
@@ -300,7 +303,14 @@ public class GameController {
         }
         return null;
     }
-}
+
+    }
+
+
+
+
+
+
 
 
 
