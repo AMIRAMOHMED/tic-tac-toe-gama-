@@ -87,7 +87,7 @@ public class RequestHandler {
     }
 
     private static void ServerShutDown() {
-        showAlert("Server ShutDown", "We are Sorry The server has been shut down");
+        //showAlert("Server ShutDown", "We are Sorry The server has been shut down");
     }
 
     private static void surrendered(){
